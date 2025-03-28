@@ -1,0 +1,9 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+# Your rule content
+
+Evite a duplicação de códigos sempre que possivel, o que significa verificar outras áreas do código que ja possam conter códigos e funcionalidades semelhantes
