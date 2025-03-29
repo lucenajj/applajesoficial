@@ -52,6 +52,11 @@ type Metrics = {
   previousPeriodCalculations?: number;
 };
 
+type User = {
+  id: string;
+  name: string;
+};
+
 export const HomePage = () => {
   const [metrics, setMetrics] = useState<Metrics>({
     customerCount: 0,
@@ -67,6 +72,8 @@ export const HomePage = () => {
   const [error, setError] = useState<string | null>(null);
   const [timeRange, setTimeRange] = useState<TimeRange>('30d');
   const [showComparison, setShowComparison] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<string>('all');
+  const [users, setUsers] = useState<User[]>([]);
 
   const getDateRange = (range: TimeRange): { start: Date; end: Date; previousStart: Date; previousEnd: Date } => {
     const now = new Date();
@@ -103,6 +110,24 @@ export const HomePage = () => {
   };
 
   useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('users')
+          .select('id, name')
+          .order('name');
+
+        if (error) throw error;
+        setUsers(data || []);
+      } catch (error) {
+        console.error('Erro ao buscar usuários:', error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
+  useEffect(() => {
     const fetchMetrics = async () => {
       try {
         setLoading(true);
@@ -111,7 +136,7 @@ export const HomePage = () => {
         const { start, end, previousStart, previousEnd } = getDateRange(timeRange);
         
         // Buscar dados básicos
-        const [customersResponse, usersResponse, calculationsResponse] = await Promise.all([
+        const [customersResponse, usersResponse, calculationsQuery] = await Promise.all([
           supabase.from('customers').select('count', { count: 'exact' }),
           supabase.from('users').select('count', { count: 'exact' }),
           supabase.from('calculations')
@@ -122,11 +147,17 @@ export const HomePage = () => {
 
         if (customersResponse.error) throw new Error(customersResponse.error.message);
         if (usersResponse.error) throw new Error(usersResponse.error.message);
-        if (calculationsResponse.error) throw new Error(calculationsResponse.error.message);
+        if (calculationsQuery.error) throw new Error(calculationsQuery.error.message);
+
+        let calculations = calculationsQuery.data || [];
+
+        // Filtrar por vendedor se necessário
+        if (selectedUser !== 'all') {
+          calculations = calculations.filter(calc => calc.user_id === selectedUser);
+        }
 
         const customerCount = customersResponse.count || 0;
         const userCount = usersResponse.count || 0;
-        const calculations = calculationsResponse.data || [];
 
         // Separar cálculos do período atual e anterior
         const currentPeriodCalcs = calculations.filter(
@@ -201,7 +232,7 @@ export const HomePage = () => {
     };
 
     fetchMetrics();
-  }, [timeRange]);
+  }, [timeRange, selectedUser]);
 
   const MetricCard = ({ 
     title, 
@@ -291,6 +322,21 @@ export const HomePage = () => {
           Dashboard
         </Typography>
         <Stack direction="row" spacing={2} alignItems="center">
+          <FormControl size="small" sx={{ minWidth: 200 }}>
+            <InputLabel>Vendedor</InputLabel>
+            <Select
+              value={selectedUser}
+              label="Vendedor"
+              onChange={(e) => setSelectedUser(e.target.value)}
+            >
+              <MenuItem value="all">Todos os vendedores</MenuItem>
+              {users.map(user => (
+                <MenuItem key={user.id} value={user.id}>
+                  {user.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <FormControl size="small" sx={{ minWidth: 200 }}>
             <InputLabel>Período</InputLabel>
             <Select

@@ -5,6 +5,11 @@
 ### Março
 
 #### 13/03/2024
+- ✨ **Filtro por Vendedor no Dashboard**
+  - Adição de dropdown para filtrar dados por vendedor específico
+  - Atualização automática das métricas ao selecionar vendedor
+  - Integração com dados existentes mantendo a análise temporal
+
 - ✨ **Dashboard Aprimorado**
   - Implementação de análise temporal com seleção de períodos (30d, 90d, 180d, 365d, YTD)
   - Adição de comparação entre períodos com indicadores visuais
@@ -19,4 +24,5 @@
 - Visualização de crescimento percentual
 - Cálculo de métricas avançadas (taxa de retenção, ticket médio)
 - Interface adaptativa para mobile e desktop
-- Gráficos interativos com dados comparativos 
+- Gráficos interativos com dados comparativos
+- Filtro de vendedores com atualização dinâmica das métricas 
