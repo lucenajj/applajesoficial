@@ -78,7 +78,7 @@ export const LoginPage = () => {
             component="h1" 
             align="center" 
             sx={{ 
-              color: '#006064', 
+              color: '#224080', 
               fontWeight: 500,
               mb: 2
             }}
@@ -158,9 +158,9 @@ export const LoginPage = () => {
                 py: 1, 
                 borderRadius: 1,
                 textTransform: 'none',
-                backgroundColor: '#26a69a',
+                backgroundColor: '#224080',
                 '&:hover': {
-                  backgroundColor: '#00897b',
+                  backgroundColor: '#162C5C',
                 }
               }}
               disabled={loading}
@@ -172,7 +172,7 @@ export const LoginPage = () => {
         
         <Box
           sx={{
-            backgroundColor: '#e0f2f1',
+            backgroundColor: '#E6EAF5',
             padding: '15px',
             display: 'flex',
             justifyContent: 'center',
@@ -190,19 +190,14 @@ export const LoginPage = () => {
             sx={{ 
               textTransform: 'none',
               backgroundColor: 'white',
-              border: '1px solid #26a69a',
+              border: '1px solid #224080',
               borderRadius: '4px',
               padding: '2px 10px',
               fontSize: '0.75rem',
-              color: '#26a69a',
+              color: '#224080',
               '&:hover': {
                 backgroundColor: '#f5f5f5',
               },
-              '&.Mui-disabled': {
-                color: 'rgba(0, 0, 0, 0.38)',
-                borderColor: 'rgba(0, 0, 0, 0.12)',
-                backgroundColor: '#f5f5f5'
-              }
             }}
           >
             Cadastre-se

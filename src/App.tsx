@@ -1,8 +1,8 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { ThemeProvider, CssBaseline, Box, StyledEngineProvider } from '@mui/material';
-import { createTheme } from '@mui/material/styles';
 import { Navigation } from './components/Navigation';
+import { theme } from './theme'; // Importando o tema atualizado
 import { CustomersPage } from './pages/Customers';
 import { ProductsPage } from './pages/Products';
 import { CalculationsPage } from './pages/Calculations';
@@ -12,78 +12,6 @@ import { Session } from '@supabase/supabase-js';
 import { HomePage } from './pages/Home';
 import { UsersPage } from './pages/Users';
 import './App.css';
-
-const theme = createTheme({
-  palette: {
-    mode: 'light',
-    primary: {
-      main: '#26a69a',
-    },
-    secondary: {
-      main: '#dc004e',
-    },
-  },
-  components: {
-    MuiContainer: {
-      styleOverrides: {
-        root: {
-          maxWidth: '100% !important',
-          padding: 0,
-        },
-      },
-    },
-    MuiTable: {
-      styleOverrides: {
-        root: {
-          width: '100%',
-        },
-      },
-    },
-    MuiTableContainer: {
-      styleOverrides: {
-        root: {
-          width: '100%',
-        },
-      },
-    },
-    MuiPaper: {
-      styleOverrides: {
-        root: {
-          width: '100%',
-        },
-      },
-    },
-    MuiGrid: {
-      styleOverrides: {
-        container: {
-          width: '100%',
-          margin: 0,
-        },
-      },
-    },
-    MuiModal: {
-      defaultProps: {
-        container: document.body,
-        disablePortal: false,
-        disableEnforceFocus: false,
-        disableAutoFocus: false,
-      },
-    },
-    MuiDialog: {
-      defaultProps: {
-        container: document.body,
-        disablePortal: false,
-        disableEnforceFocus: false,
-        disableAutoFocus: false,
-      },
-    },
-    MuiPopover: {
-      defaultProps: {
-        container: document.body,
-      },
-    },
-  },
-});
 
 // Componente para remover o aria-hidden do root quando um modal estiver aberto
 const AriaHiddenFix = () => {

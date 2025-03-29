@@ -80,11 +80,13 @@ export const Navigation = () => {
   return (
     <AppBar 
       position="sticky" 
-      elevation={0} 
+      elevation={0}
+      color="primary"
       sx={{ 
         borderBottom: '1px solid rgba(0,0,0,0.08)', 
         width: '100%',
-        maxWidth: '100%' 
+        maxWidth: '100%',
+        bgcolor: '#224080',
       }}
     >
       <Toolbar sx={{ 
