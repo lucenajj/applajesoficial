@@ -380,6 +380,22 @@ export const CalculationsPage = () => {
       setLoading(true);
       setError(null);
       
+      // Obter o usuário atual
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      
+      if (userError) {
+        console.error('Erro ao obter usuário atual:', userError);
+        setError('Erro ao identificar usuário. Por favor, faça login novamente.');
+        setLoading(false);
+        return;
+      }
+      
+      if (!user) {
+        setError('Usuário não identificado. Por favor, faça login novamente.');
+        setLoading(false);
+        return;
+      }
+      
       // Verificar se está editando um cálculo existente
       const isEditing = !!editingCalculationId;
       
@@ -435,6 +451,7 @@ export const CalculationsPage = () => {
           
           // Depois, quando cria updateData, usar as áreas validadas
           const updateData = {
+            user_id: user.id, // Adicionar o ID do usuário atual
             total_cost: parseFloat(totalCost.toString()),
             cost_per_m2: totalArea > 0 ? parseFloat((totalCost / totalArea).toString()) : 0,
             vigota_width: parseFloat(firstArea.vigota_width.toString()),
@@ -625,15 +642,8 @@ export const CalculationsPage = () => {
         // Criar o objeto de dados para inserção apenas com as colunas que existem na tabela
         const calculationData = {
           customer_id: data.customer_id,
-          house_id: houseId, // Obrigatório conforme esquema
-          // Remover campos que não existem na tabela
-          // house_name: data.house.name || 'Casa sem nome',  // Não existe na tabela
-          // house_address: data.house.address || '',        // Não existe na tabela
-          // vigota_id: firstArea.vigota_id,                 // Não existe na tabela
-          // ie: parseFloat(firstArea.ie.toString()),        // Não existe na tabela
-          // total_area: parseFloat(totalArea.toString()),   // Não existe na tabela
-          
-          // Campos que existem na tabela
+          house_id: houseId,
+          user_id: user.id, // Adicionar o ID do usuário atual
           vigota_width: parseFloat(firstArea.vigota_width.toString()),
           vigota_length: parseFloat(firstArea.vigota_length.toString()),
           vigota_price: parseFloat(selectedVigota.price.toString()),
@@ -641,7 +651,7 @@ export const CalculationsPage = () => {
           freight_cost: calculateCorrectFreight(data.areas),
           total_cost: parseFloat(totalCost.toString()),
           cost_per_m2: totalArea > 0 ? parseFloat((totalCost / totalArea).toString()) : 0,
-          total_area: parseFloat(totalArea.toString()) // Adicionando o campo total_area explicitamente
+          total_area: parseFloat(totalArea.toString())
         };
         
         console.log('Dados a serem salvos:', calculationData);

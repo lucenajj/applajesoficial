@@ -112,13 +112,20 @@ export const HomePage = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
+        console.log('Buscando todos os usuários para o filtro...');
         const { data, error } = await supabase
           .from('users')
-          .select('id, name')
+          .select('id, name, role')
           .order('name');
 
         if (error) throw error;
-        setUsers(data || []);
+        
+        console.log('Usuários encontrados:', data);
+        // Garantir que todos os usuários sejam incluídos no filtro
+        setUsers(data?.map(user => ({
+          id: user.id,
+          name: `${user.name} (${user.role === 'admin' ? 'Admin' : 'Vendedor'})`
+        })) || []);
       } catch (error) {
         console.error('Erro ao buscar usuários:', error);
       }

@@ -71,6 +71,7 @@ export type Area = {
 export type Calculation = {
   id: string;
   customer_id: string;
+  user_id?: string;
   house_id?: string | null;
   house_name?: string;
   house_address?: string;
