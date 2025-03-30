@@ -18,7 +18,9 @@ import {
   Stack,
   Chip,
   Tooltip,
-  IconButton
+  IconButton,
+  useTheme,
+  useMediaQuery
 } from '@mui/material';
 import { supabase } from '../lib/supabase';
 import PeopleIcon from '@mui/icons-material/People';
@@ -78,6 +80,8 @@ export const HomePage = () => {
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
   const [userData, setUserData] = useState<{role?: string}>({});
   const typography = useResponsiveTypography();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   // Log de depuração para verificar o estado atual
   useEffect(() => {
@@ -338,7 +342,7 @@ export const HomePage = () => {
     <Paper 
       elevation={0} 
       sx={{ 
-        p: 3, 
+        p: { xs: 2, sm: 3 }, 
         width: '100%',
         height: '100%',
         borderRadius: 2,
@@ -347,30 +351,64 @@ export const HomePage = () => {
         flexDirection: 'column'
       }}
     >
-      <CardContent sx={{ p: 3 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-          <Avatar sx={{ bgcolor: color, color: 'white', mr: 2 }}>
+      <CardContent sx={{ p: { xs: 1.5, sm: 3 } }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: { xs: 1, sm: 2 } }}>
+          <Avatar sx={{ 
+            bgcolor: color, 
+            color: 'white', 
+            mr: 2,
+            width: { xs: 32, sm: 40 },
+            height: { xs: 32, sm: 40 }
+          }}>
             {icon}
           </Avatar>
-          <Typography variant="h6" color="text.secondary" fontWeight="medium">
+          <Typography 
+            variant="h6" 
+            color="text.secondary" 
+            fontWeight="medium"
+            sx={{
+              fontSize: { xs: '0.9rem', sm: '1rem', md: '1.1rem' }
+            }}
+          >
             {title}
           </Typography>
         </Box>
-        <Typography variant="h3" component="div" sx={{ fontWeight: 'bold', mt: 2 }}>
+        <Typography 
+          variant="h3" 
+          component="div" 
+          sx={{ 
+            fontWeight: 'bold', 
+            mt: { xs: 1.5, sm: 2 },
+            fontSize: { xs: '1.3rem', sm: '1.7rem', md: '2rem' }
+          }}
+        >
           {value}
         </Typography>
         {subtitle && (
-          <Typography variant="subtitle2" color="text.secondary" sx={{ mt: 1 }}>
+          <Typography 
+            variant="subtitle2" 
+            color="text.secondary" 
+            sx={{ 
+              mt: 1,
+              fontSize: { xs: '0.7rem', sm: '0.8rem' }
+            }}
+          >
             {subtitle}
           </Typography>
         )}
         {comparison && (
           <Box sx={{ mt: 2, display: 'flex', alignItems: 'center' }}>
             <Chip
-              icon={<CompareArrowsIcon />}
+              icon={<CompareArrowsIcon fontSize="small" />}
               label={`${comparison.value >= 0 ? '+' : ''}${comparison.value.toFixed(1)}% vs ${comparison.label}`}
               color={comparison.value >= 0 ? 'success' : 'error'}
               size="small"
+              sx={{
+                '& .MuiChip-label': {
+                  fontSize: { xs: '0.65rem', sm: '0.75rem' }
+                },
+                height: { xs: 24, sm: 32 }
+              }}
             />
           </Box>
         )}
@@ -396,17 +434,17 @@ export const HomePage = () => {
     <Box sx={{ 
       width: '100%', 
       maxWidth: '100%', 
-      px: { xs: 2, sm: 4, md: 6 }, 
-      py: 4,
+      px: { xs: 1.5, sm: 4, md: 6 }, 
+      py: { xs: 2, sm: 4 },
       boxSizing: 'border-box',
     }}>
       <Box sx={{ 
         display: 'flex', 
         justifyContent: 'space-between', 
         alignItems: { xs: 'flex-start', sm: 'center' }, 
-        mb: 3,
+        mb: { xs: 2, sm: 3 },
         flexDirection: { xs: 'column', sm: 'row' },
-        gap: { xs: 2, sm: 0 }
+        gap: { xs: 1.5, sm: 0 }
       }}>
         <Box>
           <Typography 
@@ -416,17 +454,36 @@ export const HomePage = () => {
             color="primary" 
             sx={{ 
               mb: 0,
-              ...typography.h4 
+              fontSize: { xs: '1.2rem', sm: '1.5rem', md: '1.8rem' }
             }}
           >
             Dashboard
           </Typography>
         </Box>
-        <Stack direction="row" spacing={2} alignItems="center">
+        <Stack 
+          direction={{ xs: 'column', sm: 'row' }} 
+          spacing={{ xs: 1, sm: 2 }} 
+          alignItems={{ xs: 'stretch', sm: 'center' }}
+          width={{ xs: '100%', sm: 'auto' }}
+        >
           {/* Exibir seletor de vendedor apenas para admins */}
           {userData?.role === 'admin' && (
-            <FormControl size="small" sx={{ minWidth: 200 }}>
-              <InputLabel sx={typography.body2} shrink>Vendedor</InputLabel>
+            <FormControl 
+              size="small" 
+              sx={{ 
+                minWidth: { xs: '100%', sm: 200 },
+                width: { xs: '100%', sm: 'auto' }
+              }}
+            >
+              <InputLabel 
+                sx={{ 
+                  ...typography.body2,
+                  fontSize: { xs: '0.75rem', sm: '0.8rem' }
+                }} 
+                shrink
+              >
+                Vendedores
+              </InputLabel>
               <Select
                 value={selectedUser || ''}
                 label="Vendedor"
@@ -437,38 +494,79 @@ export const HomePage = () => {
                 displayEmpty
                 notched
                 sx={{
+                  height: { xs: '40px', sm: 'auto' },
                   '& .MuiSelect-select': {
                     ...typography.body2,
-                    paddingLeft: '14px'
+                    paddingLeft: '14px',
+                    fontSize: { xs: '0.8rem', sm: '0.85rem' }
                   },
                   '& .MuiOutlinedInput-notchedOutline': { 
                     paddingLeft: '14px' 
                   }
                 }}
               >
-                <MenuItem value="" sx={typography.body2}>Todos</MenuItem>
+                <MenuItem 
+                  value="" 
+                  sx={{
+                    ...typography.body2,
+                    fontSize: { xs: '0.8rem', sm: '0.85rem' }
+                  }}
+                >
+                  Todos
+                </MenuItem>
                 {users.map((user) => (
-                  <MenuItem key={user.id} value={user.id} sx={typography.body2}>
+                  <MenuItem 
+                    key={user.id} 
+                    value={user.id} 
+                    sx={{
+                      ...typography.body2,
+                      fontSize: { xs: '0.8rem', sm: '0.85rem' }
+                    }}
+                  >
                     {user.name}
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
           )}
-          <FormControl size="small" sx={{ minWidth: 200 }}>
-            <InputLabel sx={typography.body2}>Período</InputLabel>
+          <FormControl 
+            size="small" 
+            sx={{ 
+              minWidth: { xs: '100%', sm: 200 },
+              width: { xs: '100%', sm: 'auto' }
+            }}
+          >
+            <InputLabel 
+              sx={{ 
+                ...typography.body2,
+                fontSize: { xs: '0.75rem', sm: '0.8rem' }
+              }}
+            >
+              Período
+            </InputLabel>
             <Select
               value={timeRange}
               label="Período"
               onChange={(e) => setTimeRange(e.target.value as TimeRange)}
               sx={{
+                height: { xs: '40px', sm: 'auto' },
                 '& .MuiSelect-select': {
-                  ...typography.body2
+                  ...typography.body2,
+                  fontSize: { xs: '0.8rem', sm: '0.85rem' }
                 }
               }}
             >
               {Object.entries(timeRangeLabels).map(([value, label]) => (
-                <MenuItem key={value} value={value} sx={typography.body2}>{label}</MenuItem>
+                <MenuItem 
+                  key={value} 
+                  value={value} 
+                  sx={{
+                    ...typography.body2,
+                    fontSize: { xs: '0.8rem', sm: '0.85rem' }
+                  }}
+                >
+                  {label}
+                </MenuItem>
               ))}
             </Select>
           </FormControl>
@@ -476,6 +574,10 @@ export const HomePage = () => {
             <IconButton 
               color={showComparison ? 'primary' : 'default'}
               onClick={() => setShowComparison(!showComparison)}
+              sx={{ 
+                alignSelf: { xs: 'flex-start', sm: 'center' },
+                ml: { xs: 0, sm: 1 }
+              }}
             >
               <CompareArrowsIcon />
             </IconButton>
@@ -496,8 +598,8 @@ export const HomePage = () => {
       >
         Bem-vindo ao painel de controle do Cálculo de Orçamentos. Aqui você encontra uma visão geral do seu negócio.
       </Typography>
-      <Divider sx={{ my: 3 }} />
-
+      <Divider sx={{ my: { xs: 2, sm: 3 } }} />
+      
       {error && (
         <Alert severity="error" sx={{ mb: 3, width: '100%' }}>
           {error}
@@ -510,7 +612,7 @@ export const HomePage = () => {
         </Box>
       ) : (
         <>
-          <Grid container spacing={3} sx={{ mt: 1, width: '100%', mx: 0 }}>
+          <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ mt: { xs: 0, sm: 1 }, width: '100%', mx: 0 }}>
             <Grid item xs={12} sm={6} md={3}>
               <MetricCard 
                 title="Clientes" 
@@ -559,27 +661,47 @@ export const HomePage = () => {
             </Grid>
           </Grid>
 
-          <Grid container spacing={3} sx={{ mt: 3 }}>
+          <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ mt: { xs: 2, sm: 3 } }}>
             <Grid item xs={12}>
               <Paper 
                 elevation={0} 
                 sx={{ 
-                  p: 3, 
+                  p: { xs: 2, sm: 3 }, 
                   borderRadius: 2,
                   border: '1px solid rgba(0,0,0,0.08)',
                 }}
               >
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-                  <Typography variant="h6" fontWeight="medium">
+                <Box sx={{ 
+                  display: 'flex', 
+                  mb: { xs: 2, sm: 3 },
+                  flexDirection: { xs: 'column', sm: 'row' },
+                  alignItems: { xs: 'flex-start', sm: 'center' }
+                }}>
+                  <Typography 
+                    variant="h6" 
+                    fontWeight="medium"
+                    sx={{
+                      fontSize: { xs: '1rem', sm: '1.1rem' }
+                    }}
+                  >
                     Histórico de Vendas
                   </Typography>
                   <Tooltip title="Comparação com o mesmo período do ano anterior">
-                    <IconButton size="small" sx={{ ml: 1 }}>
+                    <IconButton 
+                      size="small" 
+                      sx={{ 
+                        ml: { xs: 0, sm: 1 },
+                        mt: { xs: 1, sm: 0 }
+                      }}
+                    >
                       <InfoOutlinedIcon fontSize="small" />
                     </IconButton>
                   </Tooltip>
                 </Box>
-                <Box sx={{ width: '100%', height: 300 }}>
+                <Box sx={{ 
+                  width: '100%', 
+                  height: { xs: 250, sm: 300 } 
+                }}>
                   <ResponsiveContainer>
                     <LineChart
                       data={metrics.salesHistory}
@@ -593,26 +715,27 @@ export const HomePage = () => {
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis 
                         dataKey="date" 
-                        tick={{ fontSize: 12 }}
+                        tick={{ fontSize: isMobile ? 10 : 12 }}
                         interval="preserveStartEnd"
                       />
                       <YAxis 
-                        tick={{ fontSize: 12 }}
+                        tick={{ fontSize: isMobile ? 10 : 12 }}
                         tickFormatter={(value) => `R$ ${value.toFixed(0)}`}
                       />
                       <RechartsTooltip 
                         formatter={(value: any) => [`R$ ${Number(value).toFixed(2)}`, 'Valor']}
                         labelFormatter={(label) => `Data: ${label}`}
+                        contentStyle={{ fontSize: '0.8rem' }}
                       />
-                      <Legend />
+                      <Legend wrapperStyle={{ fontSize: '0.8rem' }} />
                       <Line 
                         name="Período Atual"
                         type="monotone" 
                         dataKey="value" 
                         stroke="#1976d2" 
                         strokeWidth={2}
-                        dot={{ r: 4 }}
-                        activeDot={{ r: 6 }}
+                        dot={{ r: isMobile ? 3 : 4 }}
+                        activeDot={{ r: isMobile ? 5 : 6 }}
                       />
                       {showComparison && (
                         <Line 
@@ -622,7 +745,7 @@ export const HomePage = () => {
                           stroke="#9c27b0" 
                           strokeWidth={2}
                           strokeDasharray="5 5"
-                          dot={{ r: 4 }}
+                          dot={{ r: isMobile ? 3 : 4 }}
                         />
                       )}
                     </LineChart>

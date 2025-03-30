@@ -5,6 +5,19 @@
 ### Março
 
 #### 30/03/2024
+- 📱 **Otimização do Layout para Dispositivos Móveis**
+  - Melhorada a visualização em dispositivos com tela pequena como Samsung Galaxy S8+
+  - Ajustado o espaçamento e padding para melhor aproveitamento do espaço em telas pequenas
+  - Redimensionamento dinâmico dos controles para facilitar o toque em dispositivos móveis
+  - Reorganização dos elementos em layout vertical para telas estreitas
+  - Ajuste no tamanho dos ícones e fontes para melhor legibilidade em smartphones
+
+- 📊 **Aprimoramento de Gráficos em Dispositivos Móveis**
+  - Otimização da altura do gráfico de histórico para melhor visualização em telas pequenas
+  - Reduzido o tamanho dos pontos e fontes para uma exibição mais clara em dispositivos móveis
+  - Melhorada a legenda e tooltips para serem mais legíveis em telas pequenas
+  - Adaptação dinâmica baseada no tamanho de tela usando Material UI useMediaQuery
+
 - 🛠️ **Correções no Dashboard para Administradores**
   - Corrigido problema de sobreposição do label "Vendedor" com o texto "Todos" no dropdown
   - Resolvido o problema de exibição do "Total Vendido" para usuários administradores
