@@ -5,6 +5,13 @@
 ### Março
 
 #### 30/03/2024
+- 🔒 **Correção de Permissões e Filtragem por Vendedor**
+  - Corrigido problema onde vendedores podiam ver cálculos e orçamentos de outros vendedores
+  - Implementada filtragem correta de cálculos na página de Orçamentos baseada no usuário atual
+  - Adicionada verificação de papel do usuário (admin/vendedor) para determinar visibilidade de dados
+  - Garantida a consistência da filtragem por usuário em todas as páginas (Home, Customers, Calculations)
+  - Melhorada a segurança de acesso aos dados entre diferentes vendedores
+
 - 📱 **Otimização do Layout para Dispositivos Móveis**
   - Melhorada a visualização em dispositivos com tela pequena como Samsung Galaxy S8+
   - Ajustado o espaçamento e padding para melhor aproveitamento do espaço em telas pequenas

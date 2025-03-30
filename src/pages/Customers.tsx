@@ -131,7 +131,13 @@ export const CustomersPage = () => {
         .eq('id', currentUser)
         .single();
         
-      if (!userError && userData && userData.role !== 'admin' && currentUser) {
+      if (!userError && userData) {
+        // Se NÃO for admin, filtrar por user_id
+        if (userData.role !== 'admin' && currentUser) {
+          query = query.eq('user_id', currentUser);
+        }
+      } else if (currentUser) {
+        // Se ocorrer um erro ao buscar o papel, assuma posição restritiva (filtrar por user_id)
         query = query.eq('user_id', currentUser);
       }
         
@@ -308,10 +314,10 @@ export const CustomersPage = () => {
     doc.text(`Área Linear Total: ${safeFormat(selectedCalculation.total_area)} m²`, 14, 75);
     
     // Tabela de Áreas
-    if (calculationAreas.length > 0) {
+    if (calculationAreas && calculationAreas.length > 0) {
       const tableData = calculationAreas.map((area, index) => [
         `Área ${index + 1}`,
-        `${area.vigota_width}m × ${area.vigota_length}m`,
+        `${area.vigota_width || 0}m × ${area.vigota_length || 0}m`,
         `${safeFormat(parseFloat(area.vigota_width?.toString() || '0') * parseFloat(area.vigota_length?.toString() || '0') / parseFloat(area.ie?.toString() || '0.5'))} m²`,
         area.ie || '0.5'
       ]);

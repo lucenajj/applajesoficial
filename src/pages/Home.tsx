@@ -85,12 +85,15 @@ export const HomePage = () => {
 
   // Log de depuração para verificar o estado atual
   useEffect(() => {
+    // Comentado para melhorar o desempenho
+    /*
     console.log('Estado atual:', { 
       currentUser, 
       selectedUser, 
       userRole: userData?.role,
       timeRange
     });
+    */
   }, [currentUser, selectedUser, userData, timeRange]);
 
   const getDateRange = (range: TimeRange): { start: Date; end: Date; previousStart: Date; previousEnd: Date } => {
@@ -154,7 +157,6 @@ export const HomePage = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        console.log('Buscando todos os usuários para o filtro...');
         const { data, error } = await supabase
           .from('users')
           .select('id, name, role')
@@ -162,8 +164,6 @@ export const HomePage = () => {
 
         if (error) throw error;
         
-        console.log('Usuários encontrados:', data);
-        // Garantir que todos os usuários sejam incluídos no filtro
         setUsers(data?.map(user => ({
           id: user.id,
           name: `${user.name} (${user.role === 'admin' ? 'Admin' : 'Vendedor'})`
@@ -184,7 +184,8 @@ export const HomePage = () => {
         
         // Verificar que temos dados do usuário antes de continuar
         if (!userData || !currentUser) {
-          console.log('Aguardando dados do usuário...');
+          // Comentado para melhorar o desempenho
+          // console.log('Aguardando dados do usuário...');
           return;
         }
         
@@ -225,10 +226,16 @@ export const HomePage = () => {
               .gte('created_at', previousStart.toISOString())
               .lte('created_at', end.toISOString())
               .eq('user_id', filterByUserId)
-          : await supabase.from('calculations')
-              .select('*')
-              .gte('created_at', previousStart.toISOString())
-              .lte('created_at', end.toISOString());
+          : isAdmin 
+              ? await supabase.from('calculations')
+                  .select('*')
+                  .gte('created_at', previousStart.toISOString())
+                  .lte('created_at', end.toISOString())
+              : await supabase.from('calculations')
+                  .select('*')
+                  .gte('created_at', previousStart.toISOString())
+                  .lte('created_at', end.toISOString())
+                  .eq('user_id', currentUser);
 
         if (customersResponse.error) throw new Error(customersResponse.error.message);
         if (usersResponse.error) throw new Error(usersResponse.error.message);
@@ -488,7 +495,8 @@ export const HomePage = () => {
                 value={selectedUser || ''}
                 label="Vendedor"
                 onChange={(e) => {
-                  console.log('Selecionando vendedor:', e.target.value);
+                  // Comentado para melhorar o desempenho
+                  // console.log('Selecionando vendedor:', e.target.value);
                   setSelectedUser(e.target.value);
                 }}
                 displayEmpty

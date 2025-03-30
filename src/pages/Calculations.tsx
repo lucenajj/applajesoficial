@@ -185,6 +185,9 @@ export const CalculationsPage = () => {
   const [editingCalculationId, setEditingCalculationId] = useState<string | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [calculationToDelete, setCalculationToDelete] = useState<Calculation | null>(null);
+  // Adicionar estados para controlar o usuário e sua role
+  const [currentUser, setCurrentUser] = useState<string | null>(null);
+  const [userData, setUserData] = useState<{role?: string}>({});
 
   const { control, handleSubmit, reset, watch, setValue, getValues } = useForm<CalculationFormData>({
     defaultValues: {
@@ -206,23 +209,66 @@ export const CalculationsPage = () => {
     name: "areas"
   });
 
+  // Obter o usuário atual
+  useEffect(() => {
+    const getCurrentUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        setCurrentUser(user.id);
+        
+        // Buscar dados do usuário incluindo a role
+        const { data, error } = await supabase
+          .from('users')
+          .select('role')
+          .eq('id', user.id)
+          .single();
+          
+        if (!error && data) {
+          setUserData(data);
+        }
+      }
+    };
+    
+    getCurrentUser();
+  }, []);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
+        
+        // Verificar que temos dados do usuário antes de continuar
+        if (!currentUser) {
+          return;
+        }
+        
+        // Verificar se o usuário é admin
+        const isAdmin = userData?.role === 'admin';
+        
         // Primeiro, buscar apenas clientes e produtos (essenciais)
-        const [customersResponse, productsResponse, calculationsResponse] = await Promise.all([
-          supabase.from('customers').select('*'),
+        const [customersResponse, productsResponse] = await Promise.all([
+          // Filtrar clientes por vendedor se não for admin
+          isAdmin 
+            ? supabase.from('customers').select('*')
+            : supabase.from('customers').select('*').eq('user_id', currentUser),
           supabase.from('products').select('*'),
-          supabase.from('calculations').select('*').order('created_at', { ascending: false })
         ]);
 
         if (customersResponse.error) throw new Error(customersResponse.error.message);
         if (productsResponse.error) throw new Error(productsResponse.error.message);
-        if (calculationsResponse.error) throw new Error(calculationsResponse.error.message);
 
         setCustomers(customersResponse.data || []);
         setProducts(productsResponse.data || []);
+        
+        // Buscar cálculos filtrados por usuário se não for admin
+        const calculationsQuery = isAdmin
+          ? supabase.from('calculations').select('*').order('created_at', { ascending: false })
+          : supabase.from('calculations').select('*').eq('user_id', currentUser).order('created_at', { ascending: false });
+          
+        const calculationsResponse = await calculationsQuery;
+        
+        if (calculationsResponse.error) throw new Error(calculationsResponse.error.message);
+        
         setCalculations(calculationsResponse.data || []);
         
         setLoading(false);
@@ -233,8 +279,10 @@ export const CalculationsPage = () => {
       }
     };
 
-    fetchData();
-  }, []);
+    if (currentUser) {
+      fetchData();
+    }
+  }, [currentUser, userData]);
 
   useEffect(() => {
     if (selectedCustomer) {
@@ -423,6 +471,9 @@ export const CalculationsPage = () => {
         setLoading(false);
         return;
       }
+
+      // Utilizar o ID do usuário atual para garantir que o cálculo seja associado a ele
+      const userId = user.id;
       
       // Verificar se está editando um cálculo existente
       const isEditing = !!editingCalculationId;
@@ -479,7 +530,7 @@ export const CalculationsPage = () => {
           
           // Depois, quando cria updateData, usar as áreas validadas
           const updateData = {
-            user_id: user.id, // Adicionar o ID do usuário atual
+            user_id: userId, // Adicionar o ID do usuário atual
             total_cost: parseFloat(totalCost.toString()),
             cost_per_m2: totalArea > 0 ? parseFloat((totalCost / totalArea).toString()) : 0,
             vigota_width: parseFloat(firstArea.vigota_width.toString()),
@@ -671,7 +722,7 @@ export const CalculationsPage = () => {
         const calculationData = {
           customer_id: data.customer_id,
           house_id: houseId,
-          user_id: user.id, // Adicionar o ID do usuário atual
+          user_id: userId, // Adicionar o ID do usuário atual
           vigota_width: parseFloat(firstArea.vigota_width.toString()),
           vigota_length: parseFloat(firstArea.vigota_length.toString()),
           vigota_price: parseFloat(selectedVigota.price.toString()),
@@ -776,19 +827,25 @@ export const CalculationsPage = () => {
   // Função para buscar e atualizar a lista de cálculos
   const refreshCalculationsList = async () => {
     try {
-      const { data: updatedCalculations, error } = await supabase
-        .from('calculations')
-          .select('*')
-        .order('created_at', { ascending: false });
+      if (!currentUser) return;
+      
+      // Verificar se o usuário é admin
+      const isAdmin = userData?.role === 'admin';
+      
+      // Filtrar cálculos por usuário se não for admin
+      const calculationsQuery = isAdmin
+        ? supabase.from('calculations').select('*').order('created_at', { ascending: false })
+        : supabase.from('calculations').select('*').eq('user_id', currentUser).order('created_at', { ascending: false });
           
-        if (error) {
+      const { data: updatedCalculations, error } = await calculationsQuery;
+          
+      if (error) {
         console.error('Erro ao atualizar lista de cálculos:', error);
-          return;
-        }
-        
-      console.log('Lista de cálculos atualizada:', updatedCalculations);
+        return;
+      }
+      
       setCalculations(updatedCalculations || []);
-      } catch (err) {
+    } catch (err) {
       console.error('Erro ao buscar cálculos atualizados:', err);
     }
   };
