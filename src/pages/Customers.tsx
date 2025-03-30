@@ -89,6 +89,7 @@ export const CustomersPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [editingCustomer, setEditingCustomer] = useState<Customer | null>(null);
+  const [currentUser, setCurrentUser] = useState<string | null>(null);
   
   // Estados para o modal de detalhes
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
@@ -102,13 +103,37 @@ export const CustomersPage = () => {
   const [calculationAreas, setCalculationAreas] = useState<any[]>([]);
   const [loadingCalculationDetails, setLoadingCalculationDetails] = useState(false);
 
+  // Obter o usuário atual
+  useEffect(() => {
+    const getCurrentUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        setCurrentUser(user.id);
+      }
+    };
+    
+    getCurrentUser();
+  }, []);
+
   const fetchCustomers = async () => {
     try {
       setLoading(true);
-      const { data, error } = await supabase
+      let query = supabase
         .from('customers')
-        .select('*')
-        .order('created_at', { ascending: false });
+        .select('*');
+      
+      // Se não for admin, filtrar apenas os clientes do vendedor logado
+      const { data: userData, error: userError } = await supabase
+        .from('users')
+        .select('role')
+        .eq('id', currentUser)
+        .single();
+        
+      if (!userError && userData && userData.role !== 'admin' && currentUser) {
+        query = query.eq('user_id', currentUser);
+      }
+        
+      const { data, error } = await query.order('created_at', { ascending: false });
 
       if (error) {
         console.error('Error fetching customers:', error);
@@ -126,8 +151,10 @@ export const CustomersPage = () => {
   };
 
   useEffect(() => {
-    fetchCustomers();
-  }, []);
+    if (currentUser) {
+      fetchCustomers();
+    }
+  }, [currentUser]);
 
   const onSubmit = async (data: CustomerFormData) => {
     try {
@@ -139,9 +166,10 @@ export const CustomersPage = () => {
 
         if (error) throw error;
       } else {
+        // Adicionar o user_id ao cadastrar um novo cliente
         const { error } = await supabase
           .from('customers')
-          .insert([data]);
+          .insert([{ ...data, user_id: currentUser }]);
 
         if (error) throw error;
       }

@@ -7,7 +7,7 @@ import CalculateIcon from '@mui/icons-material/Calculate';
 import MenuIcon from '@mui/icons-material/Menu';
 import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 
 export const Navigation = () => {
@@ -16,14 +16,49 @@ export const Navigation = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [userRole, setUserRole] = useState<string | null>(null);
 
-  const navItems = [
-    { name: 'Home', path: '/', icon: <HomeIcon /> },
-    { name: 'Clientes', path: '/customers', icon: <PeopleIcon /> },
-    { name: 'Produtos', path: '/products', icon: <InventoryIcon /> },
-    { name: 'Cálculos', path: '/calculations', icon: <CalculateIcon /> },
-    { name: 'Usuários', path: '/users', icon: <PersonIcon /> },
-  ];
+  // Obter o role do usuário logado
+  useEffect(() => {
+    const getUserRole = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (user) {
+        // Buscar o role do usuário na tabela 'users'
+        const { data, error } = await supabase
+          .from('users')
+          .select('role')
+          .eq('id', user.id)
+          .single();
+          
+        if (!error && data) {
+          setUserRole(data.role);
+        }
+      }
+    };
+    
+    getUserRole();
+  }, []);
+
+  // Definir os itens de navegação com base no role
+  const getNavItems = () => {
+    const baseItems = [
+      { name: 'Home', path: '/', icon: <HomeIcon /> },
+      { name: 'Clientes', path: '/customers', icon: <PeopleIcon /> },
+      { name: 'Cálculos', path: '/calculations', icon: <CalculateIcon /> },
+    ];
+    
+    // Adicionar menus que só administradores devem acessar
+    if (userRole === 'admin') {
+      return [
+        ...baseItems,
+        { name: 'Produtos', path: '/products', icon: <InventoryIcon /> },
+        { name: 'Usuários', path: '/users', icon: <PersonIcon /> }
+      ];
+    }
+    
+    return baseItems;
+  };
 
   const handleNavigation = (path: string) => {
     navigate(path);
@@ -38,6 +73,8 @@ export const Navigation = () => {
     navigate('/login');
   };
 
+  const navItems = getNavItems();
+
   const drawer = (
     <Box sx={{ width: 250 }} role="presentation">
       <Box sx={{ p: 2, borderBottom: '1px solid rgba(0,0,0,0.12)', display: 'flex', alignItems: 'center' }}>
@@ -48,7 +85,6 @@ export const Navigation = () => {
       <List>
         {navItems.map((item) => (
           <ListItem 
-            button 
             key={item.name}
             onClick={() => handleNavigation(item.path)}
             selected={location.pathname === item.path}
@@ -62,14 +98,18 @@ export const Navigation = () => {
               },
               '&:hover': {
                 backgroundColor: 'rgba(0, 0, 0, 0.04)',
-              }
+              },
+              cursor: 'pointer'
             }}
           >
             <ListItemIcon>{item.icon}</ListItemIcon>
             <ListItemText primary={item.name} />
           </ListItem>
         ))}
-        <ListItem button onClick={handleLogout}>
+        <ListItem 
+          onClick={handleLogout}
+          sx={{ cursor: 'pointer' }}
+        >
           <ListItemIcon><LogoutIcon /></ListItemIcon>
           <ListItemText primary="Logout" />
         </ListItem>
