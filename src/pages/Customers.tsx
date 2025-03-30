@@ -51,6 +51,7 @@ import { useNavigate } from 'react-router-dom';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { UserOptions } from 'jspdf-autotable';
+import { useResponsiveTypography } from '../hooks/useResponsiveTypography';
 
 // Estender o tipo jsPDF para incluir autoTable
 declare module 'jspdf' {
@@ -90,6 +91,7 @@ export const CustomersPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [editingCustomer, setEditingCustomer] = useState<Customer | null>(null);
   const [currentUser, setCurrentUser] = useState<string | null>(null);
+  const typography = useResponsiveTypography();
   
   // Estados para o modal de detalhes
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
@@ -406,10 +408,21 @@ export const CustomersPage = () => {
         width: '100%'
       }}>
         <Box>
-          <Typography variant="h4" component="h1" gutterBottom fontWeight="bold" color="primary">
+          <Typography 
+            variant="h4" 
+            component="h1" 
+            gutterBottom 
+            fontWeight="bold" 
+            color="primary"
+            sx={typography.h4}
+          >
             Clientes
           </Typography>
-          <Typography variant="body1" color="text.secondary">
+          <Typography 
+            variant="body1" 
+            color="text.secondary"
+            sx={typography.body1}
+          >
             Gerencie a base de clientes da sua empresa
           </Typography>
         </Box>
@@ -423,8 +436,8 @@ export const CustomersPage = () => {
             px: 3,
             py: 1.2,
             textTransform: 'none',
-            fontWeight: 'bold',
-            mt: { xs: 2, sm: 0 }
+            mt: { xs: 2, sm: 0 },
+            ...typography.button
           }}
         >
           Novo Cliente
@@ -470,11 +483,11 @@ export const CustomersPage = () => {
           <Table aria-label="customers table">
             <TableHead>
               <TableRow>
-                <TableCell>Cliente</TableCell>
-                <TableCell>Contato</TableCell>
-                <TableCell>Endereço</TableCell>
-                <TableCell>Documentos</TableCell>
-                <TableCell align="right">Ações</TableCell>
+                <TableCell sx={typography.table.head}>Cliente</TableCell>
+                <TableCell sx={typography.table.head}>Contato</TableCell>
+                <TableCell sx={typography.table.head}>Endereço</TableCell>
+                <TableCell sx={typography.table.head}>Documentos</TableCell>
+                <TableCell align="right" sx={typography.table.head}>Ações</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -503,10 +516,18 @@ export const CustomersPage = () => {
                           {customer.name ? customer.name.charAt(0).toUpperCase() : 'C'}
                         </Avatar>
                         <Box>
-                          <Typography variant="body1" fontWeight="bold">
+                          <Typography 
+                            variant="body1" 
+                            fontWeight="bold"
+                            sx={typography.body1}
+                          >
                             {customer.name}
                           </Typography>
-                          <Typography variant="caption" color="text.secondary">
+                          <Typography 
+                            variant="caption" 
+                            color="text.secondary"
+                            sx={typography.caption}
+                          >
                             Cliente desde {formatDate(customer.created_at)}
                           </Typography>
                         </Box>
@@ -517,33 +538,60 @@ export const CustomersPage = () => {
                         {customer.email && (
                           <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
                             <EmailIcon fontSize="small" color="disabled" sx={{ mr: 1 }} />
-                            <Typography variant="body2">{customer.email}</Typography>
+                            <Typography 
+                              variant="body2"
+                              sx={typography.body2}
+                            >
+                              {customer.email}
+                            </Typography>
                           </Box>
                         )}
                         {customer.phone && (
                           <Box sx={{ display: 'flex', alignItems: 'center' }}>
                             <PhoneIcon fontSize="small" color="disabled" sx={{ mr: 1 }} />
-                            <Typography variant="body2">{customer.phone}</Typography>
+                            <Typography 
+                              variant="body2"
+                              sx={typography.body2}
+                            >
+                              {customer.phone}
+                            </Typography>
                           </Box>
                         )}
                       </Box>
                     </TableCell>
                     <TableCell>
-                      <Typography variant="body2">
+                      <Typography 
+                        variant="body2"
+                        sx={typography.body2}
+                      >
                         {customer.endereco_entrega ? customer.endereco_entrega : 'Não informado'}
                       </Typography>
                       {customer.cidade && (
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography 
+                          variant="body2" 
+                          color="text.secondary"
+                          sx={typography.body2}
+                        >
                           {customer.cidade}{customer.bairro ? `, ${customer.bairro}` : ''}
                         </Typography>
                       )}
                     </TableCell>
                     <TableCell>
                       {customer.cpf && (
-                        <Typography variant="body2">CPF: {customer.cpf}</Typography>
+                        <Typography 
+                          variant="body2"
+                          sx={typography.body2}
+                        >
+                          CPF: {customer.cpf}
+                        </Typography>
                       )}
                       {customer.rg && (
-                        <Typography variant="body2">RG: {customer.rg}</Typography>
+                        <Typography 
+                          variant="body2"
+                          sx={typography.body2}
+                        >
+                          RG: {customer.rg}
+                        </Typography>
                       )}
                     </TableCell>
                     <TableCell align="right">
@@ -574,7 +622,11 @@ export const CustomersPage = () => {
               ) : (
                 <TableRow>
                   <TableCell colSpan={5} align="center" sx={{ py: 3 }}>
-                    <Typography variant="body1" color="text.secondary">
+                    <Typography 
+                      variant="body1" 
+                      color="text.secondary"
+                      sx={typography.body1}
+                    >
                       Nenhum cliente encontrado
                     </Typography>
                   </TableCell>

@@ -5,6 +5,14 @@
 ### Março
 
 #### 30/03/2024
+- 🎨 **Sistema de Tipografia Responsiva**
+  - Implementação de hooks personalizados para gerenciar fontes responsivas
+  - Adaptação automática do tamanho de texto para diferentes dispositivos
+  - Melhor legibilidade em smartphones e tablets
+  - Ajuste proporcional de cabeçalhos, corpo de texto e elementos da interface
+  - Otimização de leitura para listas e tabelas de dados
+  - Solucionado problema de texto truncado na lista de clientes
+
 - 🚀 **Melhorias de Responsividade no Stepper**
   - Implementada adaptação automática do Stepper para dispositivos móveis
   - Modo vertical em telas pequenas para melhor visualização das etapas
