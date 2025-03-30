@@ -5,6 +5,13 @@
 ### Março
 
 #### 30/03/2024
+- 🛠️ **Correções no Dashboard para Administradores**
+  - Corrigido problema de sobreposição do label "Vendedor" com o texto "Todos" no dropdown
+  - Resolvido o problema de exibição do "Total Vendido" para usuários administradores
+  - Adicionados logs de depuração para monitoramento do funcionamento do dashboard
+  - Melhorada a lógica de filtragem para garantir que todos os dados sejam exibidos corretamente
+  - Refinada a experiência visual do filtro de vendedores para maior clareza
+
 - 📏 **Melhorias no Layout do Dashboard**
   - Corrigido espaçamento entre o título "Dashboard" e o dropdown de período
   - Implementada disposição responsiva para dispositivos móveis

@@ -79,6 +79,16 @@ export const HomePage = () => {
   const [userData, setUserData] = useState<{role?: string}>({});
   const typography = useResponsiveTypography();
 
+  // Log de depuração para verificar o estado atual
+  useEffect(() => {
+    console.log('Estado atual:', { 
+      currentUser, 
+      selectedUser, 
+      userRole: userData?.role,
+      timeRange
+    });
+  }, [currentUser, selectedUser, userData, timeRange]);
+
   const getDateRange = (range: TimeRange): { start: Date; end: Date; previousStart: Date; previousEnd: Date } => {
     const now = new Date();
     let start: Date;
@@ -129,6 +139,7 @@ export const HomePage = () => {
           
         if (!error && data) {
           setUserData(data);
+          console.log('Dados do usuário carregados:', data);
         }
       }
     };
@@ -167,13 +178,32 @@ export const HomePage = () => {
         setLoading(true);
         setError(null);
         
+        // Verificar que temos dados do usuário antes de continuar
+        if (!userData || !currentUser) {
+          console.log('Aguardando dados do usuário...');
+          return;
+        }
+        
         const { start, end, previousStart, previousEnd } = getDateRange(timeRange);
         
         // Verificar se o usuário é admin
         const isAdmin = userData?.role === 'admin';
+        console.log('Role do usuário:', userData?.role, 'É admin?', isAdmin);
         
-        // Filtrar pelo vendedor selecionado (se for admin)
-        const filterByUserId = selectedUser || (!isAdmin ? currentUser : null);
+        // Filtrar pelo vendedor selecionado (se for admin e um vendedor foi selecionado)
+        // Se for admin sem seleção de vendedor, filterByUserId deve ser null para mostrar todos
+        let filterByUserId = null;
+        
+        if (selectedUser) {
+          // Se um vendedor foi selecionado, use-o independentemente do papel do usuário
+          filterByUserId = selectedUser;
+        } else if (!isAdmin) {
+          // Se não é admin, filtre pelo próprio usuário
+          filterByUserId = currentUser;
+        }
+        // Se for admin sem seleção, deixe null para mostrar todos
+        
+        console.log('Filtrando por usuário ID:', filterByUserId);
         
         // Buscar dados básicos - filtrar por vendedor se selecionado ou se for vendedor
         const customersResponse = filterByUserId
@@ -201,6 +231,7 @@ export const HomePage = () => {
         if (calculationsQuery.error) throw new Error(calculationsQuery.error.message);
 
         let calculations = calculationsQuery.data || [];
+        console.log('Total de cálculos encontrados:', calculations.length);
 
         const customerCount = customersResponse.count || 0;
         const userCount = usersResponse.count || 0;
@@ -213,8 +244,12 @@ export const HomePage = () => {
           calc => new Date(calc.created_at) >= previousStart && new Date(calc.created_at) < start
         );
 
+        console.log('Cálculos período atual:', currentPeriodCalcs.length);
+
         const totalSales = currentPeriodCalcs.reduce((sum, calc) => sum + (calc.total_cost || 0), 0);
         const previousPeriodSales = previousPeriodCalcs.reduce((sum, calc) => sum + (calc.total_cost || 0), 0);
+        
+        console.log('Total de vendas calculado:', totalSales);
 
         // Calcular métricas avançadas
         const averageTicket = currentPeriodCalcs.length > 0 ? totalSales / currentPeriodCalcs.length : 0;
@@ -280,7 +315,7 @@ export const HomePage = () => {
     if (currentUser) {
       fetchMetrics();
     }
-  }, [timeRange, currentUser, selectedUser]);
+  }, [timeRange, currentUser, selectedUser, userData]);
 
   const MetricCard = ({ 
     title, 
@@ -391,15 +426,23 @@ export const HomePage = () => {
           {/* Exibir seletor de vendedor apenas para admins */}
           {userData?.role === 'admin' && (
             <FormControl size="small" sx={{ minWidth: 200 }}>
-              <InputLabel sx={typography.body2}>Vendedor</InputLabel>
+              <InputLabel sx={typography.body2} shrink>Vendedor</InputLabel>
               <Select
                 value={selectedUser || ''}
                 label="Vendedor"
-                onChange={(e) => setSelectedUser(e.target.value)}
+                onChange={(e) => {
+                  console.log('Selecionando vendedor:', e.target.value);
+                  setSelectedUser(e.target.value);
+                }}
                 displayEmpty
+                notched
                 sx={{
                   '& .MuiSelect-select': {
-                    ...typography.body2
+                    ...typography.body2,
+                    paddingLeft: '14px'
+                  },
+                  '& .MuiOutlinedInput-notchedOutline': { 
+                    paddingLeft: '14px' 
                   }
                 }}
               >
