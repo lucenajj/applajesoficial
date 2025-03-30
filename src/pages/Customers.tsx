@@ -490,16 +490,15 @@ export const CustomersPage = () => {
             <TableHead>
               <TableRow>
                 <TableCell sx={typography.table.head}>Cliente</TableCell>
-                <TableCell sx={typography.table.head}>Contato</TableCell>
-                <TableCell sx={typography.table.head}>Endereço</TableCell>
-                <TableCell sx={typography.table.head}>Documentos</TableCell>
+                <TableCell sx={typography.table.head}>Email</TableCell>
+                <TableCell sx={typography.table.head}>Telefone</TableCell>
                 <TableCell align="right" sx={typography.table.head}>Ações</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={5} align="center" sx={{ py: 3 }}>
+                  <TableCell colSpan={4} align="center" sx={{ py: 3 }}>
                     <CircularProgress size={30} />
                   </TableCell>
                 </TableRow>
@@ -521,48 +520,13 @@ export const CustomersPage = () => {
                         <Avatar sx={{ mr: 2, bgcolor: 'primary.main' }}>
                           {customer.name ? customer.name.charAt(0).toUpperCase() : 'C'}
                         </Avatar>
-                        <Box>
-                          <Typography 
-                            variant="body1" 
-                            fontWeight="bold"
-                            sx={typography.body1}
-                          >
-                            {customer.name}
-                          </Typography>
-                          <Typography 
-                            variant="caption" 
-                            color="text.secondary"
-                            sx={typography.caption}
-                          >
-                            Cliente desde {formatDate(customer.created_at)}
-                          </Typography>
-                        </Box>
-                      </Box>
-                    </TableCell>
-                    <TableCell>
-                      <Box>
-                        {customer.email && (
-                          <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
-                            <EmailIcon fontSize="small" color="disabled" sx={{ mr: 1 }} />
-                            <Typography 
-                              variant="body2"
-                              sx={typography.body2}
-                            >
-                              {customer.email}
-                            </Typography>
-                          </Box>
-                        )}
-                        {customer.phone && (
-                          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                            <PhoneIcon fontSize="small" color="disabled" sx={{ mr: 1 }} />
-                            <Typography 
-                              variant="body2"
-                              sx={typography.body2}
-                            >
-                              {customer.phone}
-                            </Typography>
-                          </Box>
-                        )}
+                        <Typography 
+                          variant="body1" 
+                          fontWeight="bold"
+                          sx={typography.body1}
+                        >
+                          {customer.name}
+                        </Typography>
                       </Box>
                     </TableCell>
                     <TableCell>
@@ -570,35 +534,16 @@ export const CustomersPage = () => {
                         variant="body2"
                         sx={typography.body2}
                       >
-                        {customer.endereco_entrega ? customer.endereco_entrega : 'Não informado'}
+                        {customer.email || 'Não informado'}
                       </Typography>
-                      {customer.cidade && (
-                        <Typography 
-                          variant="body2" 
-                          color="text.secondary"
-                          sx={typography.body2}
-                        >
-                          {customer.cidade}{customer.bairro ? `, ${customer.bairro}` : ''}
-                        </Typography>
-                      )}
                     </TableCell>
                     <TableCell>
-                      {customer.cpf && (
-                        <Typography 
-                          variant="body2"
-                          sx={typography.body2}
-                        >
-                          CPF: {customer.cpf}
-                        </Typography>
-                      )}
-                      {customer.rg && (
-                        <Typography 
-                          variant="body2"
-                          sx={typography.body2}
-                        >
-                          RG: {customer.rg}
-                        </Typography>
-                      )}
+                      <Typography 
+                        variant="body2"
+                        sx={typography.body2}
+                      >
+                        {customer.phone || 'Não informado'}
+                      </Typography>
                     </TableCell>
                     <TableCell align="right">
                       <Tooltip title="Editar cliente">
@@ -627,7 +572,7 @@ export const CustomersPage = () => {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={5} align="center" sx={{ py: 3 }}>
+                  <TableCell colSpan={4} align="center" sx={{ py: 3 }}>
                     <Typography 
                       variant="body1" 
                       color="text.secondary"

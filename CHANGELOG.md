@@ -5,6 +5,13 @@
 ### Março
 
 #### 30/03/2024
+- 🔍 **Simplificação da Interface de Clientes**
+  - Reorganizada a tabela de clientes para exibir apenas informações essenciais (nome, email, telefone)
+  - Removidas as colunas de endereço e documentos da visualização principal para uma interface mais limpa
+  - Removida a data de cadastro da visualização de lista para reduzir informações redundantes
+  - Mantidas todas as informações completas no modal de detalhes acessível pelo clique no cliente ou no ícone de visualização
+  - Interface mais simples e eficaz, melhorando a experiência do usuário e a visualização em dispositivos móveis
+
 - 🔒 **Correção de Permissões e Filtragem por Vendedor**
   - Corrigido problema onde vendedores podiam ver cálculos e orçamentos de outros vendedores
   - Implementada filtragem correta de cálculos na página de Orçamentos baseada no usuário atual
