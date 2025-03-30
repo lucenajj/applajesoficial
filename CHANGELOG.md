@@ -4,6 +4,14 @@
 
 ### Março
 
+#### 30/03/2024
+- 🐛 **Correção no Dashboard para Usuários Administradores**
+  - Corrigido o problema de exibição de dados para usuários com perfil administrador
+  - Implementado filtro de vendedores exclusivo para administradores
+  - Corrigida a exibição do número total de clientes para administradores
+  - Ajustado o cálculo correto de total vendido para todos os vendedores
+  - Exibição adequada do ticket médio para administradores
+
 #### 13/03/2024
 - ✨ **Filtro por Vendedor no Dashboard**
   - Adição de dropdown para filtrar dados por vendedor específico

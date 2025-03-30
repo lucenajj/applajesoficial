@@ -11,10 +11,10 @@ import {
   CircularProgress, 
   Alert, 
   Avatar,
-  Select,
-  MenuItem,
   FormControl,
   InputLabel,
+  Select,
+  MenuItem,
   Stack,
   Chip,
   Tooltip,
@@ -72,8 +72,10 @@ export const HomePage = () => {
   const [error, setError] = useState<string | null>(null);
   const [timeRange, setTimeRange] = useState<TimeRange>('30d');
   const [showComparison, setShowComparison] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<string>('all');
   const [users, setUsers] = useState<User[]>([]);
+  const [currentUser, setCurrentUser] = useState<string | null>(null);
+  const [selectedUser, setSelectedUser] = useState<string | null>(null);
+  const [userData, setUserData] = useState<{role?: string}>({});
 
   const getDateRange = (range: TimeRange): { start: Date; end: Date; previousStart: Date; previousEnd: Date } => {
     const now = new Date();
@@ -109,6 +111,29 @@ export const HomePage = () => {
     return { start, end, previousStart, previousEnd };
   };
 
+  // Obter o usuário atual
+  useEffect(() => {
+    const getCurrentUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        setCurrentUser(user.id);
+        
+        // Buscar dados do usuário incluindo a role
+        const { data, error } = await supabase
+          .from('users')
+          .select('role')
+          .eq('id', user.id)
+          .single();
+          
+        if (!error && data) {
+          setUserData(data);
+        }
+      }
+    };
+    
+    getCurrentUser();
+  }, []);
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -142,26 +167,38 @@ export const HomePage = () => {
         
         const { start, end, previousStart, previousEnd } = getDateRange(timeRange);
         
-        // Buscar dados básicos
-        const [customersResponse, usersResponse, calculationsQuery] = await Promise.all([
-          supabase.from('customers').select('count', { count: 'exact' }),
-          supabase.from('users').select('count', { count: 'exact' }),
-          supabase.from('calculations')
-            .select('*')
-            .gte('created_at', previousStart.toISOString())
-            .lte('created_at', end.toISOString())
-        ]);
+        // Verificar se o usuário é admin
+        const isAdmin = userData?.role === 'admin';
+        
+        // Filtrar pelo vendedor selecionado (se for admin)
+        const filterByUserId = selectedUser || (!isAdmin ? currentUser : null);
+        
+        // Buscar dados básicos - filtrar por vendedor se selecionado ou se for vendedor
+        const customersResponse = filterByUserId
+          ? await supabase.from('customers')
+              .select('count', { count: 'exact' })
+              .eq('user_id', filterByUserId)
+          : await supabase.from('customers').select('count', { count: 'exact' });
+        
+        const usersResponse = await supabase.from('users').select('count', { count: 'exact' });
+        
+        // Filtrar cálculos pelo usuário selecionado ou logado
+        const calculationsQuery = filterByUserId
+          ? await supabase.from('calculations')
+              .select('*')
+              .gte('created_at', previousStart.toISOString())
+              .lte('created_at', end.toISOString())
+              .eq('user_id', filterByUserId)
+          : await supabase.from('calculations')
+              .select('*')
+              .gte('created_at', previousStart.toISOString())
+              .lte('created_at', end.toISOString());
 
         if (customersResponse.error) throw new Error(customersResponse.error.message);
         if (usersResponse.error) throw new Error(usersResponse.error.message);
         if (calculationsQuery.error) throw new Error(calculationsQuery.error.message);
 
         let calculations = calculationsQuery.data || [];
-
-        // Filtrar por vendedor se necessário
-        if (selectedUser !== 'all') {
-          calculations = calculations.filter(calc => calc.user_id === selectedUser);
-        }
 
         const customerCount = customersResponse.count || 0;
         const userCount = usersResponse.count || 0;
@@ -216,7 +253,7 @@ export const HomePage = () => {
 
         // Calcular taxa de retenção de clientes
         const totalCustomersWithCalculations = new Set(currentPeriodCalcs.map(calc => calc.customer_id)).size;
-        const customerRetention = (totalCustomersWithCalculations / customerCount) * 100;
+        const customerRetention = customerCount > 0 ? (totalCustomersWithCalculations / customerCount) * 100 : 0;
 
         setMetrics({
           customerCount,
@@ -238,8 +275,10 @@ export const HomePage = () => {
       }
     };
 
-    fetchMetrics();
-  }, [timeRange, selectedUser]);
+    if (currentUser) {
+      fetchMetrics();
+    }
+  }, [timeRange, currentUser, selectedUser]);
 
   const MetricCard = ({ 
     title, 
@@ -329,21 +368,25 @@ export const HomePage = () => {
           Dashboard
         </Typography>
         <Stack direction="row" spacing={2} alignItems="center">
-          <FormControl size="small" sx={{ minWidth: 200 }}>
-            <InputLabel>Vendedor</InputLabel>
-            <Select
-              value={selectedUser}
-              label="Vendedor"
-              onChange={(e) => setSelectedUser(e.target.value)}
-            >
-              <MenuItem value="all">Todos os vendedores</MenuItem>
-              {users.map(user => (
-                <MenuItem key={user.id} value={user.id}>
-                  {user.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          {/* Exibir seletor de vendedor apenas para admins */}
+          {userData?.role === 'admin' && (
+            <FormControl size="small" sx={{ minWidth: 200 }}>
+              <InputLabel>Vendedor</InputLabel>
+              <Select
+                value={selectedUser || ''}
+                label="Vendedor"
+                onChange={(e) => setSelectedUser(e.target.value)}
+                displayEmpty
+              >
+                <MenuItem value="">Todos</MenuItem>
+                {users.map((user) => (
+                  <MenuItem key={user.id} value={user.id}>
+                    {user.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          )}
           <FormControl size="small" sx={{ minWidth: 200 }}>
             <InputLabel>Período</InputLabel>
             <Select
