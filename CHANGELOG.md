@@ -5,6 +5,13 @@
 ### Março
 
 #### 30/03/2024
+- 📏 **Melhorias no Layout do Dashboard**
+  - Corrigido espaçamento entre o título "Dashboard" e o dropdown de período
+  - Implementada disposição responsiva para dispositivos móveis
+  - Aplicação do sistema de tipografia responsiva nos elementos do Dashboard
+  - Melhor alinhamento dos controles em diferentes tamanhos de tela
+  - Ajuste do espaçamento vertical em dispositivos menores
+
 - 🎨 **Sistema de Tipografia Responsiva**
   - Implementação de hooks personalizados para gerenciar fontes responsivas
   - Adaptação automática do tamanho de texto para diferentes dispositivos

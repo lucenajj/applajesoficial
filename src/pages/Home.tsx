@@ -32,6 +32,7 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Legend } from 'recharts';
 import { addMonths, subMonths, startOfMonth, endOfMonth, format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { useResponsiveTypography } from '../hooks/useResponsiveTypography';
 
 type TimeRange = '30d' | '90d' | '180d' | '365d' | 'ytd' | 'all';
 
@@ -76,6 +77,7 @@ export const HomePage = () => {
   const [currentUser, setCurrentUser] = useState<string | null>(null);
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
   const [userData, setUserData] = useState<{role?: string}>({});
+  const typography = useResponsiveTypography();
 
   const getDateRange = (range: TimeRange): { start: Date; end: Date; previousStart: Date; previousEnd: Date } => {
     const now = new Date();
@@ -363,24 +365,47 @@ export const HomePage = () => {
       py: 4,
       boxSizing: 'border-box',
     }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight="bold" color="primary">
-          Dashboard
-        </Typography>
+      <Box sx={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: { xs: 'flex-start', sm: 'center' }, 
+        mb: 3,
+        flexDirection: { xs: 'column', sm: 'row' },
+        gap: { xs: 2, sm: 0 }
+      }}>
+        <Box>
+          <Typography 
+            variant="h4" 
+            component="h1" 
+            fontWeight="bold" 
+            color="primary" 
+            sx={{ 
+              mb: 0,
+              ...typography.h4 
+            }}
+          >
+            Dashboard
+          </Typography>
+        </Box>
         <Stack direction="row" spacing={2} alignItems="center">
           {/* Exibir seletor de vendedor apenas para admins */}
           {userData?.role === 'admin' && (
             <FormControl size="small" sx={{ minWidth: 200 }}>
-              <InputLabel>Vendedor</InputLabel>
+              <InputLabel sx={typography.body2}>Vendedor</InputLabel>
               <Select
                 value={selectedUser || ''}
                 label="Vendedor"
                 onChange={(e) => setSelectedUser(e.target.value)}
                 displayEmpty
+                sx={{
+                  '& .MuiSelect-select': {
+                    ...typography.body2
+                  }
+                }}
               >
-                <MenuItem value="">Todos</MenuItem>
+                <MenuItem value="" sx={typography.body2}>Todos</MenuItem>
                 {users.map((user) => (
-                  <MenuItem key={user.id} value={user.id}>
+                  <MenuItem key={user.id} value={user.id} sx={typography.body2}>
                     {user.name}
                   </MenuItem>
                 ))}
@@ -388,14 +413,19 @@ export const HomePage = () => {
             </FormControl>
           )}
           <FormControl size="small" sx={{ minWidth: 200 }}>
-            <InputLabel>Período</InputLabel>
+            <InputLabel sx={typography.body2}>Período</InputLabel>
             <Select
               value={timeRange}
               label="Período"
               onChange={(e) => setTimeRange(e.target.value as TimeRange)}
+              sx={{
+                '& .MuiSelect-select': {
+                  ...typography.body2
+                }
+              }}
             >
               {Object.entries(timeRangeLabels).map(([value, label]) => (
-                <MenuItem key={value} value={value}>{label}</MenuItem>
+                <MenuItem key={value} value={value} sx={typography.body2}>{label}</MenuItem>
               ))}
             </Select>
           </FormControl>
