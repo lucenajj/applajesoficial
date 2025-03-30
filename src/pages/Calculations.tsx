@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import {
   Container,
   Typography,
@@ -44,7 +44,8 @@ import {
   ButtonBase,
   Snackbar,
   Avatar,
-  DialogContentText
+  DialogContentText,
+  Tooltip
 } from '@mui/material';
 import { useForm, Controller, useFieldArray } from 'react-hook-form';
 import { supabase, Customer, Product, Calculation } from '../lib/supabase';
@@ -132,7 +133,34 @@ const calculateCorrectFreight = (areas: any[]): number => {
   return freightCost;
 };
 
+// Hook para monitorar o tamanho da tela
+const useMediaQuery = (width: number) => {
+  const [matches, setMatches] = useState(window.innerWidth < width);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia(`(max-width: ${width}px)`);
+    const handleResize = () => setMatches(mediaQuery.matches);
+    
+    // Verificar inicialmente
+    setMatches(mediaQuery.matches);
+    
+    // Adicionar listener para mudanças
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener('change', handleResize);
+      return () => mediaQuery.removeEventListener('change', handleResize);
+    } else {
+      // Fallback para navegadores mais antigos
+      mediaQuery.addListener(handleResize);
+      return () => mediaQuery.removeListener(handleResize);
+    }
+  }, [width]);
+
+  return matches;
+};
+
 export const CalculationsPage = () => {
+  const isMobile = useMediaQuery(768);
+  const isSmallMobile = useMediaQuery(480);
   const [activeStep, setActiveStep] = useState(0);
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
@@ -1432,22 +1460,63 @@ export const CalculationsPage = () => {
         </Box>
       ) : (
         <>
-          <Stepper activeStep={activeStep} sx={{ mb: 4 }}>
-            <Step>
-              <StepLabel>Selecionar Cliente</StepLabel>
-            </Step>
-            <Step>
-              <StepLabel>Selecionar/Criar Casa</StepLabel>
-            </Step>
-            <Step>
-              <StepLabel>Adicionar Áreas</StepLabel>
-            </Step>
-            <Step>
-              <StepLabel>Resultados</StepLabel>
-            </Step>
-          </Stepper>
+          <Box 
+            sx={{ 
+              width: '100%', 
+              overflow: 'hidden',
+              px: isMobile ? 1 : 3,
+              pt: 2
+            }}
+          >
+            <Stepper 
+              activeStep={activeStep} 
+              sx={{ 
+                mb: 4,
+                '& .MuiStepLabel-label': {
+                  fontSize: isSmallMobile ? '0.75rem' : (isMobile ? '0.875rem' : '1rem'),
+                  whiteSpace: 'normal',
+                  overflow: 'visible',
+                  lineHeight: isSmallMobile ? 1.1 : 1.5,
+                },
+                '& .MuiStepper-root': {
+                  padding: isMobile ? 1 : 2,
+                },
+                '& .MuiStepConnector-line': {
+                  minHeight: isMobile ? 24 : 'auto',
+                },
+                '& .MuiStepIcon-root': {
+                  width: isSmallMobile ? '1rem' : (isMobile ? '1.2rem' : '1.5rem'),
+                  height: isSmallMobile ? '1rem' : (isMobile ? '1.2rem' : '1.5rem'),
+                  marginRight: isSmallMobile ? '4px' : '8px'
+                }
+              }} 
+              orientation={isMobile ? 'vertical' : 'horizontal'}
+              alternativeLabel={!isMobile}
+            >
+              <Step>
+                <StepLabel>{isMobile ? 'Cliente' : 'Selecionar Cliente'}</StepLabel>
+              </Step>
+              <Step>
+                <StepLabel>{isMobile ? 'Casa' : 'Selecionar/Criar Casa'}</StepLabel>
+              </Step>
+              <Step>
+                <StepLabel>{isMobile ? 'Áreas' : 'Adicionar Áreas'}</StepLabel>
+              </Step>
+              <Step>
+                <StepLabel>{isMobile ? 'Resumo' : 'Resultados'}</StepLabel>
+              </Step>
+            </Stepper>
+          </Box>
 
-          <Paper elevation={0} sx={{ p: 4, border: '1px solid rgba(0,0,0,0.08)', borderRadius: 2 }}>
+          <Paper 
+            elevation={0} 
+            sx={{ 
+              p: isMobile ? 2 : 4, 
+              border: '1px solid rgba(0,0,0,0.08)', 
+              borderRadius: 2,
+              mx: isMobile ? 1 : 3
+            }}
+          >
             {activeStep === 0 && (
               <Box>
                 <Typography variant="h6" gutterBottom fontWeight="bold">

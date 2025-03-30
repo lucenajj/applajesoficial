@@ -5,6 +5,13 @@
 ### Março
 
 #### 30/03/2024
+- 🚀 **Melhorias de Responsividade no Stepper**
+  - Implementada adaptação automática do Stepper para dispositivos móveis
+  - Modo vertical em telas pequenas para melhor visualização das etapas
+  - Ajuste dinâmico de textos e ícones conforme o tamanho da tela
+  - Otimização do espaçamento em dispositivos pequenos
+  - Textos mais concisos em dispositivos móveis
+
 - 🐛 **Correção no Dashboard para Usuários Administradores**
   - Corrigido o problema de exibição de dados para usuários com perfil administrador
   - Implementado filtro de vendedores exclusivo para administradores
