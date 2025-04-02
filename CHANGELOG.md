@@ -4,7 +4,14 @@
 
 ### Março
 
-#### 30/03/2024
+#### 02/04/2024
+- 🧮 **Correção no Cálculo do Custo por Metro Quadrado**
+  - Corrigido o cálculo do custo por m² para usar a área total (largura × comprimento) em vez da área linear
+  - Implementada lógica atualizada para garantir resultados precisos refletindo o custo real por m²
+  - Adicionados logs detalhados para facilitar a análise dos cálculos
+  - Melhorado o custo por m² nos detalhes de áreas e no resumo total
+  - Manutenção dos cálculos corretos para área linear nas outras funcionalidades
+
 - 🔍 **Simplificação da Interface de Clientes**
   - Reorganizada a tabela de clientes para exibir apenas informações essenciais (nome, email, telefone)
   - Removidas as colunas de endereço e documentos da visualização principal para uma interface mais limpa

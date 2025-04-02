@@ -1041,13 +1041,23 @@ export const CustomersPage = () => {
                                 <Typography variant="subtitle2" color="text.secondary" gutterBottom sx={{ fontSize: { xs: '0.85rem', sm: '0.9rem' } }}>
                                   {area.name || `Área ${index + 1}`}
                                 </Typography>
-                                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: { xs: 0.5, sm: 1 } }}>
-                                  <Typography variant="body2" sx={{ fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>
-                                    Dimensões: {area.vigota_width || 0}m × {area.vigota_length || 0}m
-                                  </Typography>
-                                  <Typography variant="body2" fontWeight="medium" sx={{ fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>
-                                    Área Linear: {safeFormat(parseFloat(area.vigota_width?.toString() || '0') * parseFloat(area.vigota_length?.toString() || '0') / parseFloat(area.ie?.toString() || '0.5'))} m²
-                                  </Typography>
+                                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: { xs: 0.5, sm: 1 } }}>
+                                    <Typography variant="body2" sx={{ fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>
+                                      Dimensões: {area.vigota_width || 0}m × {area.vigota_length || 0}m
+                                    </Typography>
+                                    <Typography variant="body2" fontWeight="medium" sx={{ fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>
+                                      Área Linear: {safeFormat(parseFloat(area.vigota_width?.toString() || '0') * parseFloat(area.vigota_length?.toString() || '0') / parseFloat(area.ie?.toString() || '0.5'))} m²
+                                    </Typography>
+                                  </Box>
+                                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: { xs: 0.5, sm: 1 } }}>
+                                    <Typography variant="body2" sx={{ fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>
+                                      Frete
+                                    </Typography>
+                                    <Typography variant="body2" fontWeight="medium" sx={{ fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>
+                                      R$ {safeFormat(parseFloat(area.vigota_width?.toString() || '0') * parseFloat(area.vigota_length?.toString() || '0') / parseFloat(area.ie?.toString() || '0.5') * 4.646)}
+                                    </Typography>
+                                  </Box>
                                 </Box>
                                 {index < calculationAreas.length - 1 && <Divider sx={{ my: 1 }} />}
                               </Grid>
@@ -1057,13 +1067,23 @@ export const CustomersPage = () => {
                               <Typography variant="subtitle2" color="text.secondary" gutterBottom sx={{ fontSize: { xs: '0.85rem', sm: '0.9rem' } }}>
                                 Área 1 (Principal)
                               </Typography>
-                              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: { xs: 0.5, sm: 1 } }}>
-                                <Typography variant="body2" sx={{ fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>
-                                  Dimensões: {selectedCalculation.vigota_width || 0}m × {selectedCalculation.vigota_length || 0}m
-                                </Typography>
-                                <Typography variant="body2" fontWeight="medium" sx={{ fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>
-                                  Área Linear: {safeFormat((selectedCalculation.vigota_width || 0) * (selectedCalculation.vigota_length || 0) / (selectedCalculation.ie || 0.5))} m²
-                                </Typography>
+                              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: { xs: 0.5, sm: 1 } }}>
+                                  <Typography variant="body2" sx={{ fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>
+                                    Dimensões: {selectedCalculation.vigota_width || 0}m × {selectedCalculation.vigota_length || 0}m
+                                  </Typography>
+                                  <Typography variant="body2" fontWeight="medium" sx={{ fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>
+                                    Área Linear: {safeFormat((selectedCalculation.vigota_width || 0) * (selectedCalculation.vigota_length || 0) / (selectedCalculation.ie || 0.5))} m²
+                                  </Typography>
+                                </Box>
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: { xs: 0.5, sm: 1 } }}>
+                                  <Typography variant="body2" sx={{ fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>
+                                    Frete
+                                  </Typography>
+                                  <Typography variant="body2" fontWeight="medium" sx={{ fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>
+                                    R$ {safeFormat((selectedCalculation.vigota_width || 0) * (selectedCalculation.vigota_length || 0) / (selectedCalculation.ie || 0.5) * 4.646)}
+                                  </Typography>
+                                </Box>
                               </Box>
                               <Divider sx={{ my: { xs: 0.5, sm: 1 } }} />
                               <Typography variant="body2" color="text.secondary" sx={{ mt: { xs: 1, sm: 2 }, fontStyle: 'italic', fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>
