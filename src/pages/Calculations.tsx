@@ -1221,7 +1221,7 @@ export const CalculationsPage = () => {
       ['Preço da Vigota', formatCurrency(parseFloat(selectedCalculation.vigota_price?.toString() || '0'))],
       ['Preço do EPS', formatCurrency(parseFloat(selectedCalculation.eps_price?.toString() || '0'))],
       ['Custo do Frete', formatCurrency(parseFloat(selectedCalculation.freight_cost?.toString() || '0'))],
-      ['Custo por m²', formatCurrency(parseFloat(selectedCalculation.cost_per_m2?.toString() || '0'))]
+      ['Custo por m²', formatCurrency(parseFloat(selectedCalculation.total_cost?.toString() || '0') / (parseFloat(selectedCalculation.total_area?.toString() || '1') * 0.5))]
     ];
 
     autoTable(doc, {
@@ -1270,7 +1270,7 @@ export const CalculationsPage = () => {
       `Dimensões: ${selectedCalculation.vigota_width || 0}m × ${selectedCalculation.vigota_length || 0}m\n` +
       `Área Linear Total: ${totalAreaFormatted} m²\n` +
       `Custo Total: R$ ${safeFormat(selectedCalculation.total_cost)}\n` +
-      `Custo por m²: R$ ${safeFormat(selectedCalculation.cost_per_m2)}\n\n` +
+      `Custo por m²: R$ ${safeFormat(parseFloat(selectedCalculation.total_cost?.toString() || '0') / (parseFloat(selectedCalculation.total_area?.toString() || '1') * 0.5))}\n\n` +
       `Obrigado por escolher a AppLajes!`
     );
     
@@ -1305,7 +1305,7 @@ export const CalculationsPage = () => {
       `Dimensões: ${selectedCalculation.vigota_width || 0}m × ${selectedCalculation.vigota_length || 0}m\n` +
       `Área Linear Total: ${totalAreaFormatted} m²\n` +
       `Custo Total: R$ ${safeFormat(selectedCalculation.total_cost)}\n` +
-      `Custo por m²: R$ ${safeFormat(selectedCalculation.cost_per_m2)}\n\n` +
+      `Custo por m²: R$ ${safeFormat(parseFloat(selectedCalculation.total_cost?.toString() || '0') / (parseFloat(selectedCalculation.total_area?.toString() || '1') * 0.5))}\n\n` +
       `Obrigado por escolher a AppLajes!`
     );
     
@@ -2228,7 +2228,9 @@ export const CalculationsPage = () => {
                                 )
                           } m²</TableCell>
                           <TableCell align="right">R$ {calc.total_cost?.toFixed(2) || '0.00'}</TableCell>
-                          <TableCell align="right">R$ {calc.cost_per_m2?.toFixed(2) || '0.00'}</TableCell>
+                          <TableCell align="right">R$ {(calc.total_cost && calc.total_area) ? 
+                            (parseFloat(calc.total_cost.toString()) / (parseFloat(calc.total_area.toString()) * 0.5)).toFixed(2) 
+                            : '0.00'}</TableCell>
                           <TableCell align="center">
                             <IconButton 
                               size="small" 
@@ -2490,7 +2492,7 @@ export const CalculationsPage = () => {
                             Custo por m²
                           </Typography>
                           <Typography variant="h6" fontWeight="bold" color="primary" sx={{ fontSize: { xs: '0.85rem', sm: '1rem' } }}>
-                              R$ {safeFormat(selectedCalculation.cost_per_m2)}
+                              R$ {safeFormat(selectedCalculation.total_cost / ((selectedCalculation.total_area || 1) * 0.5))}
                           </Typography>
                         </Grid>
                       </Grid>

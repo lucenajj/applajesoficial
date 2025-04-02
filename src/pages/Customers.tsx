@@ -342,7 +342,7 @@ export const CustomersPage = () => {
       ['Preço da Vigota', formatCurrency(parseFloat(selectedCalculation.vigota_price?.toString() || '0'))],
       ['Preço do EPS', formatCurrency(parseFloat(selectedCalculation.eps_price?.toString() || '0'))],
       ['Custo do Frete', formatCurrency(parseFloat(selectedCalculation.freight_cost?.toString() || '0'))],
-      ['Custo por m²', formatCurrency(parseFloat(selectedCalculation.cost_per_m2?.toString() || '0'))]
+      ['Custo por m²', formatCurrency(parseFloat(selectedCalculation.total_cost?.toString() || '0') / (parseFloat(selectedCalculation.total_area?.toString() || '1') * 0.5))]
     ];
 
     autoTable(doc, {
@@ -1149,7 +1149,7 @@ export const CustomersPage = () => {
                               Custo por m²
                             </Typography>
                             <Typography variant="h6" fontWeight="bold" color="primary" sx={{ fontSize: { xs: '0.85rem', sm: '1rem' } }}>
-                              {formatCurrency(parseFloat(selectedCalculation.cost_per_m2?.toString() || '0'))}
+                              {formatCurrency(parseFloat(selectedCalculation.total_cost?.toString() || '0') / (parseFloat(selectedCalculation.total_area?.toString() || '1') * 0.5))}
                             </Typography>
                           </Grid>
                         </Grid>

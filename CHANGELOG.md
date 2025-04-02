@@ -8,9 +8,11 @@
 - 🧮 **Correção no Cálculo do Custo por Metro Quadrado**
   - Corrigido o cálculo do custo por m² para usar a área total (largura × comprimento) em vez da área linear
   - Implementada lógica atualizada para garantir resultados precisos refletindo o custo real por m²
-  - Adicionados logs detalhados para facilitar a análise dos cálculos
-  - Melhorado o custo por m² nos detalhes de áreas e no resumo total
-  - Manutenção dos cálculos corretos para área linear nas outras funcionalidades
+  - Corrigida a exibição do custo por m² no modal de detalhes do orçamento usando a fórmula: total_cost / (total_area * 0.5)
+  - Corrigida a exibição do valor na tabela de histórico de cálculos para manter consistência
+  - Atualizado o cálculo na geração de PDF para exibir o custo por m² correto
+  - Corrigidos os valores nas funções de compartilhamento via WhatsApp e e-mail
+  - Garantida a consistência do valor do custo por m² em todas as partes da aplicação
 
 - 🔍 **Simplificação da Interface de Clientes**
   - Reorganizada a tabela de clientes para exibir apenas informações essenciais (nome, email, telefone)
