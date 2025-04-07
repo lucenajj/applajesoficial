@@ -200,8 +200,8 @@ export const CalculationsPage = () => {
         name: '', 
         vigota_id: '', 
         eps_id: '', 
-        vigota_width: 0, 
-        vigota_length: 0, 
+        vigota_width: 0.00, 
+        vigota_length: 0.00, 
         ie: 0.5 
       }]
     }
@@ -1400,8 +1400,8 @@ export const CalculationsPage = () => {
         name: '', 
         vigota_id: '', 
         eps_id: '', 
-        vigota_width: 0, 
-        vigota_length: 0, 
+        vigota_width: 0.00, 
+        vigota_length: 0.00, 
         ie: 0.5 
       }]
     });
@@ -1918,10 +1918,17 @@ export const CalculationsPage = () => {
                                 fullWidth
                                 margin="normal"
                                 inputProps={{ 
-                                  step: "0.01"
+                                  step: "0.01",
+                                  min: "0"
                                 }}
                                 InputProps={{
                                   endAdornment: <InputAdornment position="end">m</InputAdornment>,
+                                }}
+                                // Formatação para exibir com duas casas decimais
+                                value={field.value === 0 ? "0.00" : field.value}
+                                onChange={(e) => {
+                                  const value = e.target.value === "" ? 0.00 : parseFloat(e.target.value);
+                                  field.onChange(value);
                                 }}
                               />
                             )}
@@ -1941,10 +1948,17 @@ export const CalculationsPage = () => {
                                 fullWidth
                                 margin="normal"
                                 inputProps={{ 
-                                  step: "0.01" 
+                                  step: "0.01",
+                                  min: "0"
                                 }}
                                 InputProps={{
                                   endAdornment: <InputAdornment position="end">m</InputAdornment>,
+                                }}
+                                // Formatação para exibir com duas casas decimais
+                                value={field.value === 0 ? "0.00" : field.value}
+                                onChange={(e) => {
+                                  const value = e.target.value === "" ? 0.00 : parseFloat(e.target.value);
+                                  field.onChange(value);
                                 }}
                               />
                             )}
@@ -1993,8 +2007,8 @@ export const CalculationsPage = () => {
                       name: '', 
                       vigota_id: '', 
                       eps_id: '', 
-                      vigota_width: 0, 
-                      vigota_length: 0, 
+                      vigota_width: 0.00, 
+                      vigota_length: 0.00, 
                       ie: 0.5 
                     })}
                   >
