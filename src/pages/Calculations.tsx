@@ -67,6 +67,7 @@ import EmailIcon from '@mui/icons-material/Email';
 import EditIcon from '@mui/icons-material/Edit';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { useLocation, useSearchParams } from 'react-router-dom';
 
 type CalculationFormData = {
   customer_id: string;
@@ -188,6 +189,8 @@ export const CalculationsPage = () => {
   // Adicionar estados para controlar o usuário e sua role
   const [currentUser, setCurrentUser] = useState<string | null>(null);
   const [userData, setUserData] = useState<{role?: string}>({});
+  // Obter parâmetros da URL
+  const [searchParams] = useSearchParams();
 
   const { control, handleSubmit, reset, watch, setValue, getValues } = useForm<CalculationFormData>({
     defaultValues: {
@@ -271,6 +274,16 @@ export const CalculationsPage = () => {
         
         setCalculations(calculationsResponse.data || []);
         
+        // Verificar se há um parâmetro 'customer' na URL e pré-selecionar o cliente
+        const customerIdFromUrl = searchParams.get('customer');
+        if (customerIdFromUrl) {
+          console.log('Cliente da URL detectado:', customerIdFromUrl);
+          setValue('customer_id', customerIdFromUrl);
+          setSelectedCustomer(customerIdFromUrl);
+          // Avançar para o próximo passo automaticamente
+          setActiveStep(1);
+        }
+        
         setLoading(false);
       } catch (err) {
         console.error('Error fetching data:', err);
@@ -282,7 +295,7 @@ export const CalculationsPage = () => {
     if (currentUser) {
       fetchData();
     }
-  }, [currentUser, userData]);
+  }, [currentUser, userData, searchParams, setValue]);
 
   useEffect(() => {
     if (selectedCustomer) {
@@ -1641,33 +1654,66 @@ export const CalculationsPage = () => {
                     <Typography variant="subtitle1" gutterBottom fontWeight="medium">
                       Casas Existentes
                     </Typography>
-                    <List>
-                      {houses.map((house) => (
-                        <ListItem 
-                          key={house.id} 
-                          component="div"
-                          onClick={() => setSelectedHouse(house.id)}
-                          sx={{
-                            cursor: 'pointer',
-                            border: '1px solid rgba(0,0,0,0.08)',
-                            borderRadius: 1,
-                            mb: 1,
-                            backgroundColor: selectedHouse === house.id ? 'rgba(25, 118, 210, 0.08)' : 'transparent',
-                            borderLeft: selectedHouse === house.id ? '4px solid #1976d2' : '1px solid rgba(0,0,0,0.08)'
-                          }}
-                        >
-                          <ListItemText 
-                            primary={house.name} 
-                            secondary={house.address} 
-                          />
-                        </ListItem>
-                      ))}
-                    </List>
+                    
+                    <Accordion 
+                      defaultExpanded={true}
+                      expanded={houses.length > 0 && !selectedHouse}
+                      sx={{ 
+                        mb: 2, 
+                        borderRadius: '4px !important',
+                        '&:before': { display: 'none' },
+                        border: '1px solid rgba(0,0,0,0.08)',
+                      }}
+                    >
+                      <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        sx={{ 
+                          backgroundColor: 'rgba(0,0,0,0.02)', 
+                          borderRadius: '4px 4px 0 0'
+                        }}
+                      >
+                        <Typography fontWeight="medium">
+                          {selectedHouse 
+                            ? `Casa selecionada: ${houses.find(h => h.id === selectedHouse)?.name || 'Casa selecionada'}`
+                            : 'Selecione uma casa existente'
+                          }
+                        </Typography>
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        <List sx={{ maxHeight: '300px', overflow: 'auto' }}>
+                          {houses.map((house) => (
+                            <ListItem 
+                              key={house.id} 
+                              component="div"
+                              onClick={() => {
+                                setSelectedHouse(house.id);
+                                // Preencher os campos do formulário com os dados da casa selecionada
+                                setValue('house.name', house.name || '');
+                                setValue('house.address', house.address || '');
+                              }}
+                              sx={{
+                                cursor: 'pointer',
+                                border: '1px solid rgba(0,0,0,0.08)',
+                                borderRadius: 1,
+                                mb: 1,
+                                backgroundColor: selectedHouse === house.id ? 'rgba(25, 118, 210, 0.08)' : 'transparent',
+                                borderLeft: selectedHouse === house.id ? '4px solid #1976d2' : '1px solid rgba(0,0,0,0.08)'
+                              }}
+                            >
+                              <ListItemText 
+                                primary={house.name} 
+                                secondary={house.address} 
+                              />
+                            </ListItem>
+                          ))}
+                        </List>
+                      </AccordionDetails>
+                    </Accordion>
                   </Box>
                 )}
 
                 <Typography variant="subtitle1" gutterBottom fontWeight="medium">
-                  Nova Casa
+                  {selectedHouse ? 'Detalhes da Casa Selecionada' : 'Nova Casa'}
                 </Typography>
                 
                 <Controller
@@ -1697,6 +1743,22 @@ export const CalculationsPage = () => {
                     />
                   )}
                 />
+
+                {selectedHouse && (
+                  <Button
+                    variant="outlined"
+                    color="secondary"
+                    onClick={() => {
+                      setSelectedHouse(null);
+                      setValue('house.name', '');
+                      setValue('house.address', '');
+                    }}
+                    sx={{ mt: 2 }}
+                    startIcon={<CloseIcon />}
+                  >
+                    Limpar seleção
+                  </Button>
+                )}
 
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 3 }}>
                   <Button 

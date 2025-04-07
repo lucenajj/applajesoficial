@@ -5,6 +5,20 @@
 ### Abril
 
 #### 07/04/2024
+- 🏠 **Melhoria no Componente de Seleção de Casas**
+  - Implementado accordion para agrupar as casas existentes, reduzindo a poluição visual
+  - Adicionado fechamento automático do accordion ao selecionar uma casa
+  - Preenchimento automático dos campos de nome e endereço ao selecionar uma casa existente
+  - Adicionado botão "Limpar seleção" para facilitar a troca de casa selecionada
+  - Melhorada a experiência do usuário com feedback visual da seleção atual
+  - Otimizada a visualização com rolagem interna para muitas casas cadastradas
+
+- 🔄 **Integração entre Clientes e Cálculos**
+  - Implementada seleção automática do cliente ao criar um novo orçamento a partir da tela de detalhes do cliente
+  - Adicionado parâmetro na URL para passar o ID do cliente entre páginas
+  - Avanço automático para o próximo passo ao detectar o cliente na URL
+  - Melhorada a experiência do usuário, eliminando etapas manuais redundantes
+
 - 💰 **Padronização da Formatação Monetária**
   - Implementada formatação de valores monetários no padrão brasileiro (R$ 1.696,94) em todo o sistema
   - Criada função de utilidade `formatCurrency` centralizada para garantir consistência
