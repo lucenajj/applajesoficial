@@ -2024,7 +2024,7 @@ export const CalculationsPage = () => {
                             Custo Total
                           </Typography>
                           <Typography variant="h5" fontWeight="bold" sx={{ mt: 1 }}>
-                            R$ {totalCost.toFixed(2)}
+                            {formatCurrency(totalCost)}
                           </Typography>
                         </Paper>
                       </Grid>
@@ -2047,7 +2047,7 @@ export const CalculationsPage = () => {
                             Custo por m²
                           </Typography>
                           <Typography variant="h5" fontWeight="bold" sx={{ mt: 1 }}>
-                            R$ {totalArea > 0 ? (totalCost / (totalArea * 0.5)).toFixed(2) : '0.00'}
+                            {totalArea > 0 ? formatCurrency(totalCost / (totalArea * 0.5)) : formatCurrency(0)}
                           </Typography>
                         </Paper>
                       </Grid>
@@ -2081,7 +2081,7 @@ export const CalculationsPage = () => {
                         }}
                       >
                         <Typography fontWeight="medium">
-                          {areaName} - R$ {result.totalCost.toFixed(2)}
+                          {areaName} - {formatCurrency(result.totalCost)}
                         </Typography>
                       </AccordionSummary>
                       <AccordionDetails>
@@ -2092,19 +2092,19 @@ export const CalculationsPage = () => {
                           </Grid>
                           <Grid item xs={12} sm={6} md={4}>
                             <Typography variant="body2" color="text.secondary">Vigotas</Typography>
-                            <Typography variant="body1" fontWeight="medium">R$ {result.vigotaPrice.toFixed(2)}</Typography>
+                            <Typography variant="body1" fontWeight="medium">{formatCurrency(result.vigotaPrice)}</Typography>
                           </Grid>
                           <Grid item xs={12} sm={6} md={4}>
                             <Typography variant="body2" color="text.secondary">EPS</Typography>
-                            <Typography variant="body1" fontWeight="medium">{result.epsQuantity} unidades - R$ {result.epsPrice.toFixed(2)}</Typography>
+                            <Typography variant="body1" fontWeight="medium">{result.epsQuantity} unidades - {formatCurrency(result.epsPrice)}</Typography>
                           </Grid>
                           <Grid item xs={12} sm={6} md={4}>
                             <Typography variant="body2" color="text.secondary">Frete</Typography>
-                            <Typography variant="body1" fontWeight="medium">R$ {result.freightCost.toFixed(2)}</Typography>
+                            <Typography variant="body1" fontWeight="medium">{formatCurrency(result.freightCost)}</Typography>
                           </Grid>
                           <Grid item xs={12} sm={6} md={4}>
                             <Typography variant="body2" color="text.secondary">Custo por m²</Typography>
-                            <Typography variant="body1" fontWeight="medium">R$ {result.costPerM2.toFixed(2)}</Typography>
+                            <Typography variant="body1" fontWeight="medium">{formatCurrency(result.costPerM2)}</Typography>
                           </Grid>
                         </Grid>
                       </AccordionDetails>
@@ -2227,10 +2227,10 @@ export const CalculationsPage = () => {
                                     : "0.00"
                                 )
                           } m²</TableCell>
-                          <TableCell align="right">R$ {calc.total_cost?.toFixed(2) || '0.00'}</TableCell>
-                          <TableCell align="right">R$ {(calc.total_cost && calc.total_area) ? 
-                            (parseFloat(calc.total_cost.toString()) / (parseFloat(calc.total_area.toString()) * 0.5)).toFixed(2) 
-                            : '0.00'}</TableCell>
+                          <TableCell align="right">{formatCurrency(calc.total_cost || 0)}</TableCell>
+                          <TableCell align="right">{formatCurrency((calc.total_cost && calc.total_area) ? 
+                            (parseFloat(calc.total_cost.toString()) / (parseFloat(calc.total_area.toString()) * 0.5)) 
+                            : 0)}</TableCell>
                           <TableCell align="center">
                             <IconButton 
                               size="small" 
@@ -2460,7 +2460,7 @@ export const CalculationsPage = () => {
                             Custos
                           </Typography>
                           <Typography variant="body1" fontWeight="medium" sx={{ fontSize: { xs: '0.9rem', sm: '1rem' } }}>
-                              R$ {safeFormat(selectedCalculation.total_cost)}
+                              {formatCurrency(selectedCalculation.total_cost || 0)}
                           </Typography>
                         </Grid>
                         <Grid item xs={12} sm={4}>
@@ -2468,7 +2468,7 @@ export const CalculationsPage = () => {
                             Preço da Vigota
                           </Typography>
                           <Typography variant="body1" fontWeight="medium" sx={{ fontSize: { xs: '0.85rem', sm: '1rem' } }}>
-                              R$ {safeFormat(selectedCalculation.vigota_price)}
+                              {formatCurrency(selectedCalculation.vigota_price || 0)}
                           </Typography>
                         </Grid>
                         <Grid item xs={12} sm={4}>
@@ -2476,7 +2476,7 @@ export const CalculationsPage = () => {
                             Preço do EPS
                           </Typography>
                           <Typography variant="body1" fontWeight="medium" sx={{ fontSize: { xs: '0.85rem', sm: '1rem' } }}>
-                              R$ {safeFormat(selectedCalculation.eps_price)}
+                              {formatCurrency(selectedCalculation.eps_price || 0)}
                           </Typography>
                         </Grid>
                         <Grid item xs={12} sm={4}>
@@ -2484,7 +2484,7 @@ export const CalculationsPage = () => {
                             Custo do Frete
                           </Typography>
                           <Typography variant="body1" fontWeight="medium" sx={{ fontSize: { xs: '0.85rem', sm: '1rem' } }}>
-                              R$ {safeFormat(selectedCalculation.freight_cost)}
+                              {formatCurrency(selectedCalculation.freight_cost || 0)}
                           </Typography>
                         </Grid>
                         <Grid item xs={12} sm={4}>
@@ -2492,7 +2492,7 @@ export const CalculationsPage = () => {
                             Custo por m²
                           </Typography>
                           <Typography variant="h6" fontWeight="bold" color="primary" sx={{ fontSize: { xs: '0.85rem', sm: '1rem' } }}>
-                              R$ {safeFormat(selectedCalculation.total_cost / ((selectedCalculation.total_area || 1) * 0.5))}
+                              {formatCurrency(selectedCalculation.total_cost / ((selectedCalculation.total_area || 1) * 0.5))}
                           </Typography>
                         </Grid>
                       </Grid>

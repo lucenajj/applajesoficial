@@ -2,6 +2,17 @@
 
 ## 2024
 
+### Abril
+
+#### 07/04/2024
+- 💰 **Padronização da Formatação Monetária**
+  - Implementada formatação de valores monetários no padrão brasileiro (R$ 1.696,94) em todo o sistema
+  - Criada função de utilidade `formatCurrency` centralizada para garantir consistência
+  - Corrigida a exibição de valores nos cards do Dashboard, incluindo "Total Vendido" e "Ticket Médio"
+  - Padronizada a exibição de valores no gráfico de histórico de vendas e tooltips
+  - Atualizada a exibição de valores monetários na página de Cálculos e Orçamentos
+  - Garantida a consistência visual entre todas as partes da aplicação e o PDF gerado
+
 ### Março
 
 #### 02/04/2024

@@ -23,6 +23,7 @@ import {
   useMediaQuery
 } from '@mui/material';
 import { supabase } from '../lib/supabase';
+import { formatCurrency } from '../utils/formatters';
 import PeopleIcon from '@mui/icons-material/People';
 import PersonIcon from '@mui/icons-material/Person';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
@@ -641,7 +642,7 @@ export const HomePage = () => {
             <Grid item xs={12} sm={6} md={3}>
               <MetricCard 
                 title="Total Vendido" 
-                value={`R$ ${metrics.totalSales.toFixed(2)}`} 
+                value={formatCurrency(metrics.totalSales)} 
                 icon={<AttachMoneyIcon />}
                 color="#ed6c02"
                 subtitle={`Crescimento: ${metrics.monthlyGrowth.toFixed(1)}%`}
@@ -657,7 +658,7 @@ export const HomePage = () => {
                 value={metrics.totalCalculations} 
                 icon={<CalculateIcon />}
                 color="#9c27b0"
-                subtitle={`Ticket Médio: R$ ${metrics.averageTicket.toFixed(2)}`}
+                subtitle={`Ticket Médio: ${formatCurrency(metrics.averageTicket)}`}
                 comparison={showComparison ? {
                   value: calculateComparison(
                     metrics.totalCalculations,
@@ -728,10 +729,10 @@ export const HomePage = () => {
                       />
                       <YAxis 
                         tick={{ fontSize: isMobile ? 10 : 12 }}
-                        tickFormatter={(value) => `R$ ${value.toFixed(0)}`}
+                        tickFormatter={(value) => formatCurrency(value)}
                       />
                       <RechartsTooltip 
-                        formatter={(value: any) => [`R$ ${Number(value).toFixed(2)}`, 'Valor']}
+                        formatter={(value: any) => [formatCurrency(Number(value)), 'Valor']}
                         labelFormatter={(label) => `Data: ${label}`}
                         contentStyle={{ fontSize: '0.8rem' }}
                       />
