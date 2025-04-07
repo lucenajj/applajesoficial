@@ -1917,6 +1917,9 @@ export const CalculationsPage = () => {
                                 label="Vigota (m)"
                                 fullWidth
                                 margin="normal"
+                                inputProps={{ 
+                                  step: "0.01"
+                                }}
                                 InputProps={{
                                   endAdornment: <InputAdornment position="end">m</InputAdornment>,
                                 }}
@@ -1937,6 +1940,9 @@ export const CalculationsPage = () => {
                                 label="Vão (m)"
                                 fullWidth
                                 margin="normal"
+                                inputProps={{ 
+                                  step: "0.01" 
+                                }}
                                 InputProps={{
                                   endAdornment: <InputAdornment position="end">m</InputAdornment>,
                                 }}

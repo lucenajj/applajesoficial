@@ -5,6 +5,12 @@
 ### Abril
 
 #### 07/04/2024
+- 🔢 **Suporte a Valores Decimais em Medidas**
+  - Implementado suporte a casas decimais nos campos de Vigota (m) e Vão (m)
+  - Adicionado incremento de 0,01 para permitir medidas precisas como 3,1m ou 3,25m
+  - Melhorada a precisão dos cálculos de orçamentos com medidas exatas
+  - Mantida compatibilidade com as fórmulas de cálculo existentes
+
 - 🏠 **Melhoria no Componente de Seleção de Casas**
   - Implementado accordion para agrupar as casas existentes, reduzindo a poluição visual
   - Adicionado fechamento automático do accordion ao selecionar uma casa
@@ -19,6 +25,7 @@
   - Avanço automático para o próximo passo ao detectar o cliente na URL
   - Melhorada a experiência do usuário, eliminando etapas manuais redundantes
 
+#### 07/04/2024
 - 💰 **Padronização da Formatação Monetária**
   - Implementada formatação de valores monetários no padrão brasileiro (R$ 1.696,94) em todo o sistema
   - Criada função de utilidade `formatCurrency` centralizada para garantir consistência
