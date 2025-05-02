@@ -16,8 +16,15 @@ export type User = {
 export type Product = {
   id: string;
   name: string;
-  type: 'vigota' | 'eps';
-  price: number;
+  type: 'forro' | 'piso';
+  venda: number;
+  fios: number;
+  carga: number;
+  ht: number;
+  minimo: number;
+  maximo: number;
+  custo: number;
+  margem: number;
   description?: string;
   created_at: string;
   updated_at: string;

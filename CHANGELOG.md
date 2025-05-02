@@ -2,6 +2,17 @@
 
 ## 2024
 
+### Maio
+
+#### 10/05/2024
+- 🐛 **Correção no Cadastro de Produtos**
+  - Corrigido o problema de incompatibilidade entre o valor do campo "type" no frontend e as restrições do banco de dados
+  - Implementado mapeamento automático e flexível de tipos que funciona com diferentes versões das migrações
+  - Corrigido o problema de componentes não controlados mudando para controlados em campos numéricos
+  - Melhorada a formatação de valores decimais com 3 casas para os campos monetários e de medidas
+  - Implementada conversão correta de valores entre o formato brasileiro (com vírgula) e o formato do banco (com ponto)
+  - Adicionada validação para garantir que todos os campos numéricos tenham valores válidos antes de enviar ao banco
+
 ### Abril
 
 #### 07/04/2024
