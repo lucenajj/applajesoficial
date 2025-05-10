@@ -5,6 +5,8 @@ import { Navigation } from './components/Navigation';
 import { theme } from './theme'; // Importando o tema atualizado
 import { CustomersPage } from './pages/Customers';
 import { ProductsPage } from './pages/Products';
+import { EPSProductsPage } from './pages/EPSProducts';
+import { CapaProductsPage } from './pages/CapaProducts';
 import { CalculationsPage } from './pages/Calculations';
 import { LoginPage } from './pages/Login';
 import { supabase } from './lib/supabase';
@@ -114,6 +116,9 @@ function App() {
                   <Route path="/calculations" element={<CalculationsPage />} />
                   <Route path="/customers" element={<CustomersPage />} />
                   <Route path="/products" element={<ProductsPage />} />
+                  <Route path="/products/vigotas" element={<ProductsPage />} />
+                  <Route path="/products/eps" element={<EPSProductsPage />} />
+                  <Route path="/products/capa" element={<CapaProductsPage />} />
                   <Route path="/users" element={<UsersPage />} />
                   <Route path="*" element={<Navigate to="/" />} />
                 </Routes>

@@ -30,6 +30,30 @@ export type Product = {
   updated_at: string;
 };
 
+export type EPS = {
+  id: string;
+  nome: string;
+  tipo: string;
+  dimensoes: string;
+  custo: number;
+  margem: number;
+  venda: number;
+  created_at?: string;
+  updated_at?: string;
+};
+
+export type Capa = {
+  id: string;
+  nome: string;
+  tipo: string;
+  dimensoes: string;
+  custo: number;
+  margem: number;
+  venda: number;
+  created_at?: string;
+  updated_at?: string;
+};
+
 export type Customer = {
   id: string;
   name: string;

@@ -4,7 +4,29 @@
 
 ### Maio
 
-#### 10/05/2024
+#### 10/05/2025
+- 🧩 **Implementação de Categorias de Produtos "Eps" e "Capa"**
+  - Criação de novas categorias de produtos: "EPS" e "Capa"
+  - Implementação de páginas dedicadas para cada categoria, respeitando campos específicos
+  - Arquitetura modular para permitir fácil adição de novas categorias no futuro
+  - Roteamento dinâmico com base na categoria selecionada
+  - Consistência visual e funcional entre todas as categorias de produtos
+  - Definição de esquemas de tabelas otimizados para cada tipo de produto
+
+- 🔄 **Melhorias na Gestão de Produtos**
+  - Cálculo automático de preço de venda com base no custo e margem
+  - Manipulação otimizada de valores numéricos com suporte a vírgula e ponto
+  - Interfaces de cadastro adaptadas para cada categoria
+  - Melhoria na visualização de produtos em tabelas com campos específicos
+  - Validação de dados antes da inserção no banco
+
+- 📊 **Organização de Dados no Supabase**
+  - Criação das tabelas `eps_products` e `capa_products` com estruturas customizadas
+  - Instruções detalhadas para aplicação das migrações necessárias
+  - Documentação das estruturas de dados em README
+  - Separação lógica dos produtos por categoria no banco de dados
+
+#### 28/04/2025
 - 🐛 **Correção no Cadastro de Produtos**
   - Corrigido o problema de incompatibilidade entre o valor do campo "type" no frontend e as restrições do banco de dados
   - Implementado mapeamento automático e flexível de tipos que funciona com diferentes versões das migrações
@@ -15,7 +37,7 @@
 
 ### Abril
 
-#### 07/04/2024
+#### 07/04/2025
 - 🔢 **Suporte a Valores Decimais em Medidas**
   - Implementado suporte a casas decimais nos campos de Vigota (m) e Vão (m)
   - Adicionado incremento de 0,01 para permitir medidas precisas como 3,1m ou 3,25m
@@ -36,7 +58,7 @@
   - Avanço automático para o próximo passo ao detectar o cliente na URL
   - Melhorada a experiência do usuário, eliminando etapas manuais redundantes
 
-#### 07/04/2024
+#### 07/04/2025
 - 💰 **Padronização da Formatação Monetária**
   - Implementada formatação de valores monetários no padrão brasileiro (R$ 1.696,94) em todo o sistema
   - Criada função de utilidade `formatCurrency` centralizada para garantir consistência
@@ -47,7 +69,7 @@
 
 ### Março
 
-#### 02/04/2024
+#### 02/04/2025
 - 🧮 **Correção no Cálculo do Custo por Metro Quadrado**
   - Corrigido o cálculo do custo por m² para usar a área total (largura × comprimento) em vez da área linear
   - Implementada lógica atualizada para garantir resultados precisos refletindo o custo real por m²
@@ -120,7 +142,7 @@
   - Ajustado o cálculo correto de total vendido para todos os vendedores
   - Exibição adequada do ticket médio para administradores
 
-#### 13/03/2024
+#### 13/03/2025
 - ✨ **Filtro por Vendedor no Dashboard**
   - Adição de dropdown para filtrar dados por vendedor específico
   - Atualização automática das métricas ao selecionar vendedor
